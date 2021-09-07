@@ -164,7 +164,7 @@
       selectable: true,
       businessHours: true,
       dayMaxEvents: true, // allow "more" link when too many events
-      events: params_event,
+      events: '<?= site_url(get_controller() . '/getCalendarView') ?>',
       eventStartEditable: false,
       eventDrop: function(arg) {
         var start = arg.event.start.toDateString() + ' ' + arg.event.start.getHours() + ':' + arg.event.start.getMinutes() + ':' + arg.event.start.getSeconds();

@@ -9,10 +9,13 @@ class Booking_model extends CI_Model
   function getBooking($filter = null)
   {
     $where = 'WHERE 1=1';
-    $select = "book.*,merk.merk_mobil,jenis.jenis_mobil,provinsi,kabupaten,kecamatan,kelurahan";
+    $tot_servis = "SELECT COUNT(id_booking) FROm booking_services WHERE id_booking=book.id_booking";
+    $select = "book.*,merk.merk_mobil,jenis.jenis_mobil,provinsi,kabupaten,kecamatan,kelurahan,($tot_servis) tot_servis";
     if (isset($filter['select'])) {
       if ($filter['select'] == 'dropdown') {
         $select = "id_merk_mobil id, merk_mobil text";
+      } elseif ($filter['select'] == 'calendar_view') {
+        $select = "CONCAT(book.no_polisi,', ',($tot_servis),' services') title,tanggal_booking start,tanggal_booking end";
       }
     }
     if ($filter != null) {

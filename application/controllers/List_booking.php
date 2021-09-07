@@ -8,7 +8,7 @@ class List_booking extends Crm_Controller
   {
     parent::__construct();
     if (!logged_in()) redirect('auth/login');
-    $this->load->model('merk_mobil_model', 'mbl_m');
+    $this->load->model('booking_model', 'book_m');
   }
 
   public function index()
@@ -29,30 +29,27 @@ class List_booking extends Crm_Controller
     $no = $this->input->post('start') + 1;
     foreach ($fetch_data as $rs) {
       $params      = [
-        'get'   => "id = " . $rs->id
+        'get'   => "id_booking" . $rs->id_booking
       ];
-      $aktif = '';
-      if ($rs->aktif == 1) {
-        $aktif = '<i class="fa fa-check"></i>';
-      }
 
       $sub_array   = array();
-      $html = '<a href="' . site_url(get_slug() . '/detail?id=' . $rs->id) . '" style="color:black" class="list-group-item d-flex align-items-center radius-10 mb-2 shadow-sm">
+      $html = '<a href="' . site_url(get_slug() . '/detail?id=' . $rs->id_booking) . '" style="color:black" class="list-group-item d-flex align-items-center radius-10 mb-2 shadow-sm">
       <div class="d-flex align-items-center">
         <div class="font-4">
-        <img src="http://localhost/polesjambi/assets/images/avatars/avatar.png" class="user-img" alt="user avatar">
+        <img src="' . base_url() . '/assets/images/avatars/avatar.png" class="user-img" alt="user avatar">
         </div>
         <div class="flex-grow-1 ms-2">
-          <p style="font-weight:500" class="mb-0">User ' . $rs->id . ' melakukan booking 4 services untuk mobil ' . $rs->mobil . '</p>
-          <p style="font-size:13px" class="mb-0">Booking untuk tanggal : ' . $rs->tgl . '</p>
+          <p style="font-weight:500" class="mb-0">' . $rs->nama_lengkap . ' melakukan booking ' . $rs->tot_servis . ' services untuk Mobil ' . $rs->merk_mobil . '</p>
+          <p style="font-weight:500" class="mb-0">#No. Polisi : ' . strtoupper($rs->no_polisi) . '</p>
+          <p style="font-size:13px" class="mb-0">Booking untuk tanggal : ' . $rs->tanggal_booking . ' ' . $rs->jam_booking . '</p>
         </div>
       </div>
       <div class="ms-auto">';
-      if ($rs->id == 1) {
+      if ($rs->status == 'menunggu_pembayaran') {
         $html .= '<button type="button" class="btn btn-outline-primary btn-sm">Menunggu Pembayaran</button>';
-      } elseif ($rs->id == 2) {
+      } elseif ($rs->status == 'menunggu_kedatangan') {
         $html .= '<button type="button" class="btn btn-outline-info btn-sm">Menunggu Kedatangan</button>';
-      } elseif ($rs->id == 3) {
+      } elseif ($rs->status == 'sedang_dikerjakan') {
         $html .= '<button type="button" class="btn btn-outline-info btn-sm">Sedang Dikerjakan</button>';
       }
       $html .= '<!-- <div class="btn-group">
@@ -88,18 +85,11 @@ class List_booking extends Crm_Controller
       'order'  => isset($_POST['order']) ? $_POST['order'] : '',
       'search' => $this->input->post('search')['value'],
       'order_column' => 'view',
-      'deleted' => false
     ];
     if ($recordsFiltered == true) {
-      // return $this->mbl_m->getMerkMobil($filter)->num_rows();
-      return 1;
+      return $this->book_m->getBooking($filter)->num_rows();
     } else {
-      // return $this->mbl_m->getMerkMobil($filter)->result();
-      $sample[] = ['id' => 1, 'mobil' => 'Toyota Avanza', 'aktif' => 1, 'tgl' => '01 September 2021, 08:00'];
-      $sample[] = ['id' => 2, 'mobil' => 'Daihatsu Xenia', 'aktif' => 1, 'tgl' => '01 September 2021, 10:00'];
-      $sample[] = ['id' => 3, 'mobil' => 'Daihatsu Terios', 'aktif' => 1, 'tgl' => '01 September 2021, 15:00'];
-      $sample = json_decode(json_encode($sample), FALSE);
-      return $sample;
+      return $this->book_m->getBooking($filter)->result();
     }
   }
 
@@ -216,5 +206,13 @@ class List_booking extends Crm_Controller
     //   $this->session->set_flashdata(msg_not_found());
     //   redirect(get_slug());
     // }
+  }
+
+  function getCalendarView()
+  {
+    header('Content-Type: application/json');
+    $fbook = ['select' => 'calendar_view'];
+    $data = $this->book_m->getBooking($fbook)->result();
+    send_json($data);
   }
 }

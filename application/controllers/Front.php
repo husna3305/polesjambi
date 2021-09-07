@@ -95,6 +95,7 @@ class Front extends Crm_Controller
         'total_dp' => $this->dm->nominalDP($tot_biaya),
         'nominal_unik'    => rand(100, 500),
         'created_at'      => waktu(),
+        'status' => 'menunggu_pembayaran',
         'created_by'      => 0,
       ];
 
