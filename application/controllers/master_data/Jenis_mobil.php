@@ -63,7 +63,7 @@ class Jenis_mobil extends Crm_Controller
       'order'  => isset($_POST['order']) ? $_POST['order'] : '',
       'search' => $this->input->post('search')['value'],
       'order_column' => 'view',
-      'deleted' => false
+      'deleted' => 0
     ];
     if ($recordsFiltered == true) {
       return $this->jns_m->getJenisMobil($filter)->num_rows();
@@ -162,6 +162,7 @@ class Jenis_mobil extends Crm_Controller
     $tes = ['update' => $update];
     // send_json($tes);
     $this->db->trans_begin();
+    $filter = ['id_jenis_mobil' => $post['id_jenis_mobil']];
     $this->db->update('ms_jenis_mobil', $update, $filter);
     if ($this->db->trans_status() === FALSE) {
       $this->db->trans_rollback();
@@ -183,11 +184,41 @@ class Jenis_mobil extends Crm_Controller
     $data['file']  = 'jenis_mobil_form';
     $data['mode']  = 'detail';
     $params = get_params($this->input->get(), true);
-    $filter['id_merk_mobil']  = $params['id'];
-    $row = $this->jns_m->getMerkMobil($filter)->row();
+    $filter['id_jenis_mobil']  = $params['id'];
+    $row = $this->jns_m->getJenisMobil($filter)->row();
     if ($row != NULL) {
       $data['row'] = $row;
       $this->template_portal($data);
+    } else {
+      $this->session->set_flashdata(msg_not_found());
+      redirect(get_slug());
+    }
+  }
+
+  public function delete()
+  {
+    $params = get_params($this->input->get(), true);
+    $filter['id_jenis_mobil']  = $params['id'];
+    $row = $this->jns_m->getJenisMobil($filter)->row();
+    if ($row != NULL) {
+      $this->db->trans_begin();
+      $upd = ['aktif' => 0, 'deleted' => 1];
+      $this->db->update('ms_jenis_mobil', $upd, $filter);
+      if ($this->db->trans_status() === FALSE) {
+        $this->db->trans_rollback();
+        $this->session->set_flashdata(msg_error('Telah terjadi kesalahan !'));
+        $status = 0;
+      } else {
+        $this->db->trans_commit();
+        $this->session->set_flashdata(msg_sukses_hapus());
+        $status = 1;
+      }
+      $response = [
+        'status' => $status,
+        'url'    => site_url(get_slug())
+      ];
+      $this->session->set_flashdata(msg_sukses_hapus());
+      send_json($response);
     } else {
       $this->session->set_flashdata(msg_not_found());
       redirect(get_slug());

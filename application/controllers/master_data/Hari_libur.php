@@ -62,7 +62,7 @@ class Hari_libur extends Crm_Controller
       'search' => $this->input->post('search')['value'],
       'order_column' => 'view',
       'group_by' => 'id_generated',
-      'deleted' => false
+      'deleted' => 0
     ];
     if ($recordsFiltered == true) {
       return $this->lbr_m->getHariLibur($filter)->num_rows();
@@ -185,31 +185,47 @@ class Hari_libur extends Crm_Controller
     send_json($response);
   }
 
-  public function detail()
-  {
-    $data['title'] = 'Detail ' . $this->title;
-    $data['file']  = 'hari_libur_form';
-    $data['mode']  = 'detail';
-    $params = get_params($this->input->get(), true);
-    $filter['id_merk_mobil']  = $params['id'];
-    $row = $this->lbr_m->getHariLibur($filter)->row();
-    if ($row != NULL) {
-      $data['row'] = $row;
-      $this->template_portal($data);
-    } else {
-      $this->session->set_flashdata(msg_not_found());
-      redirect(get_slug());
-    }
-  }
-
   function getListForCalendar()
   {
     $filter = [
       'group_by' => 'id_generated',
-      'select' => 'for_calendar'
+      'select' => 'for_calendar',
+      'deleted' => 0
     ];
     $libur = $this->lbr_m->getHariLibur($filter)->result_array();
     $response = ['status' => 1, 'data' => $libur];
     send_json($response);
+  }
+
+  public function delete()
+  {
+    $params = get_params($this->input->get(), true);
+    $filter['id_generated']  = $params['id_generated'];
+    $filter['group_by']  = 'id_generated';
+    $row = $this->lbr_m->getHariLibur($filter)->row();
+    if ($row != NULL) {
+      $this->db->trans_begin();
+      $upd = ['deleted' => 1];
+      unset($filter['group_by']);
+      $this->db->update('ms_hari_libur', $upd, $filter);
+      if ($this->db->trans_status() === FALSE) {
+        $this->db->trans_rollback();
+        $this->session->set_flashdata(msg_error('Telah terjadi kesalahan !'));
+        $status = 0;
+      } else {
+        $this->db->trans_commit();
+        $this->session->set_flashdata(msg_sukses_hapus());
+        $status = 1;
+      }
+      $response = [
+        'status' => $status,
+        'url'    => site_url(get_slug())
+      ];
+      $this->session->set_flashdata(msg_sukses_hapus());
+      send_json($response);
+    } else {
+      $this->session->set_flashdata(msg_not_found());
+      redirect(get_slug());
+    }
   }
 }

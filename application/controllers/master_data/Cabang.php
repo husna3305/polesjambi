@@ -72,7 +72,7 @@ class Cabang extends Crm_Controller
       'order'  => isset($_POST['order']) ? $_POST['order'] : '',
       'search' => $this->input->post('search')['value'],
       'order_column' => 'view',
-      'deleted' => false
+      'deleted' => 0
     ];
     if ($recordsFiltered == true) {
       return $this->cab_m->getCabang($filter)->num_rows();
@@ -218,6 +218,36 @@ class Cabang extends Crm_Controller
     if ($row != NULL) {
       $data['row'] = $row;
       $this->template_portal($data);
+    } else {
+      $this->session->set_flashdata(msg_not_found());
+      redirect(get_slug());
+    }
+  }
+
+  public function delete()
+  {
+    $params = get_params($this->input->get(), true);
+    $filter['id_cabang']  = $params['id_cabang'];
+    $row = $this->cab_m->getCabang($filter)->row();
+    if ($row != NULL) {
+      $this->db->trans_begin();
+      $upd = ['aktif' => 0, 'deleted' => 1];
+      $this->db->update('ms_cabang', $upd, $filter);
+      if ($this->db->trans_status() === FALSE) {
+        $this->db->trans_rollback();
+        $this->session->set_flashdata(msg_error('Telah terjadi kesalahan !'));
+        $status = 0;
+      } else {
+        $this->db->trans_commit();
+        $this->session->set_flashdata(msg_sukses_hapus());
+        $status = 1;
+      }
+      $response = [
+        'status' => $status,
+        'url'    => site_url(get_slug())
+      ];
+      $this->session->set_flashdata(msg_sukses_hapus());
+      send_json($response);
     } else {
       $this->session->set_flashdata(msg_not_found());
       redirect(get_slug());

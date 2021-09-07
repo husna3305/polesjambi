@@ -1,0 +1,37 @@
+<?php
+
+defined('BASEPATH') or exit('No direct script access allowed');
+
+
+
+class Migration_Create_theme_customizer extends CI_Migration
+
+{
+
+    public function up()
+
+    {
+
+        $this->dbforge->add_field(array(
+            'id_user' => ['type' => 'INT', 'constraint' => 8, 'unsigned' => TRUE],
+            'theme_style' => ['type' => 'VARCHAR', 'constraint' => 60],
+            'header_colors' => ['type' => 'VARCHAR', 'constraint' => 60],
+            'sidebar_background' => ['type' => 'VARCHAR', 'constraint' => 60],
+            'created_at' => ['type' => 'DATETIME'],
+            'created_by' => ['type' => 'INT', 'constraint' => 8, 'unsigned' => TRUE],
+            'updated_at' => ['type' => 'DATETIME', 'null' => true],
+            'updated_by' => ['type' => 'INT', 'constraint' => 8, 'unsigned' => TRUE, 'null' => true],
+        ));
+        $this->dbforge->add_key('id_user', TRUE);
+        $attributes = array('ENGINE' => 'InnoDB');
+        $this->dbforge->create_table('setting_theme_customizer', FALSE, $attributes);
+    }
+
+
+
+    public function down()
+
+    {
+        $this->dbforge->drop_table('setting_theme_customizer');
+    }
+}

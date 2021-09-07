@@ -72,6 +72,7 @@ class Services extends Crm_Controller
       'order'  => isset($_POST['order']) ? $_POST['order'] : '',
       'search' => $this->input->post('search')['value'],
       'order_column' => 'view',
+      'deleted' => 0
     ];
     if ($recordsFiltered == true) {
       return $this->srv_m->getServices($filter)->num_rows();
@@ -124,14 +125,16 @@ class Services extends Crm_Controller
       'created_by' => $user->id_user,
     ];
 
-    $tes = [
-      'insert' => $insert,
-      'ins_gambar' => $ins_gambar,
-    ];
+    // $tes = [
+    //   'insert' => $insert,
+    //   'ins_gambar' => $ins_gambar,
+    // ];
     // send_json($tes);
     $this->db->trans_begin();
     $this->db->insert('ms_services', $insert);
-    $this->db->insert('ms_services_gambar', $ins_gambar);
+    if (isset($ins_gambar)) {
+      $this->db->insert('ms_services_gambar', $ins_gambar);
+    }
     if ($this->db->trans_status() === FALSE) {
       $this->db->trans_rollback();
       $response = ['status' => 0, 'pesan' => 'Telah terjadi kesalahan !'];
@@ -174,15 +177,28 @@ class Services extends Crm_Controller
 
     $gambar = $this->_upload_gambar("$id_services" . "1");
     if ($gambar) {
-      $upd_gambar = [
-        'id_services' => $id_services,
-        'id_gambar'  => 1,
-        'utama'      => 1,
-        'updated_at' => waktu(),
-        'updated_by' => $user->id_user,
-        'gambar_big'    => $gambar == true ? $gambar['gambar_big'] : null,
-        'gambar_small'  => $gambar == true ? $gambar['gambar_small'] : null,
-      ];
+      $cek = $this->db->query("SELECT id_services FROM ms_services_gambar WHERE id_gambar=1 AND id_services='$id_services'")->row();
+      if ($cek == null) {
+        $ins_gambar = [
+          'id_services' => $id_services,
+          'id_gambar'  => 1,
+          'utama'      => 1,
+          'created_at' => waktu(),
+          'created_by' => $user->id_user,
+          'gambar_big'    => $gambar == true ? $gambar['gambar_big'] : null,
+          'gambar_small'  => $gambar == true ? $gambar['gambar_small'] : null,
+        ];
+      } else {
+        $upd_gambar = [
+          'id_services' => $id_services,
+          'id_gambar'  => 1,
+          'utama'      => 1,
+          'updated_at' => waktu(),
+          'updated_by' => $user->id_user,
+          'gambar_big'    => $gambar == true ? $gambar['gambar_big'] : null,
+          'gambar_small'  => $gambar == true ? $gambar['gambar_small'] : null,
+        ];
+      }
     }
 
     if ($post['estimasi_waktu_menit'] > 59) {
@@ -203,6 +219,7 @@ class Services extends Crm_Controller
     $tes = [
       'update' => $update,
       'upd_gambar' => isset($upd_gambar) ? $upd_gambar : null,
+      'ins_gambar' => isset($ins_gambar) ? $ins_gambar : null,
     ];
     // send_json($tes);
     unset($filter['response_validate']);
@@ -211,6 +228,9 @@ class Services extends Crm_Controller
     if (isset($upd_gambar)) {
       $filter['id_gambar'] = 1;
       $this->db->update('ms_services_gambar', $upd_gambar, $filter);
+    }
+    if (isset($ins_gambar)) {
+      $this->db->insert('ms_services_gambar', $ins_gambar);
     }
     if ($this->db->trans_status() === FALSE) {
       $this->db->trans_rollback();
@@ -274,6 +294,36 @@ class Services extends Crm_Controller
     } else {
       // $response = ['status' => 0, 'pesan' => $this->upload->display_errors()];
       // send_json($response);
+    }
+  }
+
+  public function delete()
+  {
+    $params = get_params($this->input->get(), true);
+    $filter['id_services']  = $params['id_services'];
+    $row = $this->srv_m->getServices($filter)->row();
+    if ($row != NULL) {
+      $this->db->trans_begin();
+      $upd = ['aktif' => 0, 'deleted' => 1];
+      $this->db->update('ms_services', $upd, $filter);
+      if ($this->db->trans_status() === FALSE) {
+        $this->db->trans_rollback();
+        $this->session->set_flashdata(msg_error('Telah terjadi kesalahan !'));
+        $status = 0;
+      } else {
+        $this->db->trans_commit();
+        $this->session->set_flashdata(msg_sukses_hapus());
+        $status = 1;
+      }
+      $response = [
+        'status' => $status,
+        'url'    => site_url(get_slug())
+      ];
+      $this->session->set_flashdata(msg_sukses_hapus());
+      send_json($response);
+    } else {
+      $this->session->set_flashdata(msg_not_found());
+      redirect(get_slug());
     }
   }
 }
