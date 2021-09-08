@@ -10,7 +10,7 @@ class Booking_model extends CI_Model
   {
     $where = 'WHERE 1=1';
     $tot_servis = "SELECT COUNT(id_booking) FROm booking_services WHERE id_booking=book.id_booking";
-    $select = "book.*,merk.merk_mobil,jenis.jenis_mobil,provinsi,kabupaten,kecamatan,kelurahan,($tot_servis) tot_servis";
+    $select = "book.*,merk.merk_mobil,jenis.jenis_mobil,provinsi,kabupaten,kecamatan,kelurahan,($tot_servis) tot_servis,(book.total_dp+book.nominal_unik) grand_tot_dp";
     if (isset($filter['select'])) {
       if ($filter['select'] == 'dropdown') {
         $select = "id_merk_mobil id, merk_mobil text";
@@ -61,6 +61,65 @@ class Booking_model extends CI_Model
     LEFT JOIN wilayah_kabupaten kab ON kab.kabupaten_id=book.kabupaten_id
     LEFT JOIN wilayah_kecamatan kec ON kec.kecamatan_id=book.kecamatan_id
     LEFT JOIN wilayah_kelurahan kel ON kel.kelurahan_id=book.kelurahan_id
+    $where
+    $order_data
+    $limit
+    ");
+    if (isset($filter['response_validate'])) {
+      $data = $data->row();
+      if ($data == NULL) {
+        $response = ['status' => 0, 'pesan' => 'Data booking tidak ditemukan'];
+        send_json($response);
+      } else {
+        return $data;
+      }
+    } else {
+      return $data;
+    }
+  }
+  function getBookingServices($filter = null)
+  {
+    $where = 'WHERE 1=1';
+    $select = "bserv.*,srv.judul";
+    if ($filter != null) {
+      $filter = $this->db->escape_str($filter);
+      if (isset($filter['id_booking'])) {
+        if ($filter['id_booking'] != '') {
+          $where .= " AND book.id_booking='{$filter['id_booking']}'";
+        }
+      }
+      if (isset($filter['search'])) {
+        if ($filter['search'] != '') {
+          $filter['search'] = $this->db->escape_str($filter['search']);
+          $where .= " AND (book.id_merk_mobil LIKE '%{$filter['search']}%'
+                           OR book.merk_mobil LIKE '%{$filter['search']}%'
+                      )
+          
+          ";
+        }
+      }
+    }
+
+    $order_data = '';
+    if (isset($filter['order'])) {
+      $order = $filter['order'];
+      $order_column = [null, 'merk_mobil', 'aktif', null];
+      if ($order != '') {
+        $order_clm  = $order_column[$order['0']['column']];
+        $order_by   = $order['0']['dir'];
+        $order_data = " ORDER BY $order_clm $order_by ";
+      }
+    }
+
+    $limit = '';
+    if (isset($filter['limit'])) {
+      $limit = $filter['limit'];
+    }
+
+    $data = $this->db->query("SELECT $select
+    FROM booking_services AS bserv
+    JOIN booking book ON book.id_booking=bserv.id_booking
+    JOIN ms_services srv ON srv.id_services=bserv.id_services
     $where
     $order_data
     $limit

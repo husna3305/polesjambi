@@ -28,18 +28,16 @@ class List_booking extends Crm_Controller
     $data = array();
     $no = $this->input->post('start') + 1;
     foreach ($fetch_data as $rs) {
-      $params      = [
-        'get'   => "id_booking" . $rs->id_booking
-      ];
+      $params      = set_crypt("id_0=$rs->id_booking");
 
       $sub_array   = array();
-      $html = '<a href="' . site_url(get_slug() . '/detail?id=' . $rs->id_booking) . '" style="color:black" class="list-group-item d-flex align-items-center radius-10 mb-2 shadow-sm">
+      $html = '<a href="' . site_url(get_slug() . '/detail?' . $params) . '" style="color:black" class="list-group-item d-flex align-items-center radius-10 mb-2 shadow-sm">
       <div class="d-flex align-items-center">
         <div class="font-4">
         <img src="' . base_url() . '/assets/images/avatars/avatar.png" class="user-img" alt="user avatar">
         </div>
         <div class="flex-grow-1 ms-2">
-          <p style="font-weight:500" class="mb-0">' . $rs->nama_lengkap . ' melakukan booking ' . $rs->tot_servis . ' services untuk Mobil ' . $rs->merk_mobil . '</p>
+          <p style="font-weight:500" class="mb-0">' . $rs->nama_lengkap . ' melakukan booking ' . $rs->tot_servis . ' services untuk Mobil ' . $rs->merk_mobil . ' ' . $rs->jenis_mobil . '</p>
           <p style="font-weight:500" class="mb-0">#No. Polisi : ' . strtoupper($rs->no_polisi) . '</p>
           <p style="font-size:13px" class="mb-0">Booking untuk tanggal : ' . $rs->tanggal_booking . ' ' . $rs->jam_booking . '</p>
         </div>
@@ -193,19 +191,17 @@ class List_booking extends Crm_Controller
     $data['title'] = 'Detail ' . $this->title;
     $data['file']  = 'list_booking/list_booking_detail';
     $data['mode']  = 'detail';
-    $data['id'] = $this->input->get('id');
-    $this->template_portal($data);
-
-    // $params = get_params($this->input->get(), true);
-    // $filter['id_merk_mobil']  = $params['id'];
-    // $row = $this->mbl_m->getMerkMobil($filter)->row();
-    // if ($row != NULL) {
-    //   $data['row'] = $row;
-    //   $this->template_portal($data);
-    // } else {
-    //   $this->session->set_flashdata(msg_not_found());
-    //   redirect(get_slug());
-    // }
+    $params = get_params($this->input->get(), true);
+    $filter['id_booking']  = $params['id_0'];
+    $row = $this->book_m->getBooking($filter)->row();
+    if ($row != NULL) {
+      $data['row'] = $row;
+      $data['services'] = $this->book_m->getBookingServices($filter)->result();
+      $this->template_portal($data);
+    } else {
+      $this->session->set_flashdata(msg_not_found());
+      redirect(get_slug());
+    }
   }
 
   function getCalendarView()
