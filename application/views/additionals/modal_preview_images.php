@@ -2,7 +2,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalPreviewImagesLabel">Preview Images</h5>
+        <h5 class="modal-title" id="modalPreviewImagesLabel"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -14,8 +14,9 @@
   </div>
 </div>
 <script>
-  function showModalPreviewImages(src) {
+  function showModalPreviewImages(src, title = 'Preview Images') {
     $('#img_preview').attr('src', src)
     $('#modalPreviewImages').modal('show');
+    $('#modalPreviewImagesLabel').text(title)
   }
 </script>

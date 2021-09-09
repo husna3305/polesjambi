@@ -229,6 +229,36 @@
       }
     })
   }
+
+  $('.datetimepicker').daterangepicker({
+    timePicker: true,
+    timePickerIncrement: 1,
+    singleDatePicker: true,
+    timePicker24Hour: true,
+    timePickerSeconds: true,
+    isInvalidDate: false,
+    autoUpdateInput: false,
+    startDate: moment().startOf('seconds'),
+    locale: {
+      cancelLabel: 'Clear',
+      format: 'YYYY-MM-DD HH:mm',
+      //  monthNames: [
+      //    "Januari",
+      //    "Februari",
+      //    "Maret",
+      //    "April",
+      //    "Mei",
+      //    "Juni",
+      //    "Jul",
+      //    "Agustus",
+      //    "September",
+      //    "Oktober",
+      //    "November",
+      //    "Desember"
+      //  ]
+    },
+
+  })
 </script>
 </body>
 

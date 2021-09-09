@@ -675,6 +675,14 @@ function theme_style()
     return $res->theme_style;
   }
 }
+function batas_maksimal_booking()
+{
+  $CI   = &get_instance();
+  $res = $CI->db->query("SELECT batas_maks_booking_kedepan FROM ms_pengaturan WHERE aktif=1 ORDER BY id_pengaturan LIMIT 1")->row();
+  if ($res != null) {
+    return tambah_hari(waktu(), $res->batas_maks_booking_kedepan);
+  }
+}
 
 function sidebar_background()
 {

@@ -37,6 +37,14 @@
     });
   </script>
 
+  <link rel="stylesheet" href="<?= base_url('assets/') ?>plugins/bootstrap-daterangepicker/daterangepicker.css">
+  <link rel="stylesheet" href="<?= base_url('assets/') ?>plugins/datetimepicker/css/classic.css">
+  <link rel="stylesheet" href="<?= base_url('assets/') ?>plugins/datetimepicker/css/classic.time.css">
+  <script src="<?= base_url() ?>assets/plugins/moment/moment.js"></script>
+  <script src="<?= base_url() ?>assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
+  <script src="<?= base_url() ?>assets/plugins/datetimepicker/js/picker.js"></script>
+  <script src="<?= base_url() ?>assets/plugins/datetimepicker/js/picker.time.js"></script>
+
   <title>Booking Form</title>
 </head>
 
@@ -75,12 +83,7 @@
             </div>
             <div class="form-group">
               <label for="jadwal">Jadwal Booking</label>
-              <input id="datepicker" name="tanggal_booking" />
-              <script>
-                $('#datepicker').datepicker({
-                  uiLibrary: 'bootstrap4',
-                });
-              </script>
+              <input class='datepicker form-control' name="tanggal_booking" readonly />
             </div>
             <div class="form-group">
               <label for="inputjam">Jadwal Booking (JAM & MENIT)</label>
@@ -288,6 +291,38 @@
       },
     }
   })
+
+  var today = new Date();
+  var dd = today.getDate();
+  var mm = today.getMonth() + 1; //January is 0! 
+  var yyyy = today.getFullYear();
+  if (dd < 10) {
+    dd = '0' + dd
+  }
+  if (mm < 10) {
+    mm = '0' + mm
+  }
+  var today = yyyy + '/' + mm + '/' + dd;
+  var endDate = '<?= batas_maksimal_booking() ?>';
+  $('.datepicker').daterangepicker({
+    //  timePicker: false,
+    minDate: today,
+    maxDate: endDate,
+    singleDatePicker: true,
+    isInvalidDate: false,
+    autoUpdateInput: false,
+    showDropdowns: true,
+    locale: {
+      cancelLabel: 'Clear',
+      format: 'YYYY-MM-DD',
+    },
+  })
+  $('.datepicker').on('apply.daterangepicker', function(ev, picker) {
+    $(this).val(picker.startDate.format('YYYY-MM-DD'));
+  });
+  $('.datepicker').on('cancel.daterangepicker', function(ev, picker) {
+    $(this).val('');
+  });
 </script>
 
 </html>
