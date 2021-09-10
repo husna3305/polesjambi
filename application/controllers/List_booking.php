@@ -45,6 +45,8 @@ class List_booking extends Crm_Controller
       <div class="ms-auto">';
       if ($rs->status == 'menunggu_pembayaran') {
         $html .= '<button type="button" class="btn btn-outline-primary btn-sm">Menunggu Pembayaran</button>';
+      } elseif ($rs->status == 'dp_lunas') {
+        $html .= '<button type="button" class="btn btn-outline-success btn-sm">Pembayaran DP Lunas</button>';
       } elseif ($rs->status == 'menunggu_kedatangan') {
         $html .= '<button type="button" class="btn btn-outline-info btn-sm">Menunggu Kedatangan</button>';
       } elseif ($rs->status == 'sedang_dikerjakan') {
@@ -189,7 +191,7 @@ class List_booking extends Crm_Controller
   public function detail()
   {
     $data['title'] = 'Detail ' . $this->title;
-    $data['file']  = 'list_booking/list_booking_detail';
+    $data['file']  = 'list_booking_detail';
     $data['mode']  = 'detail';
     $params = get_params($this->input->get(), true);
     $filter['id_booking']  = $params['id_0'];
@@ -197,6 +199,8 @@ class List_booking extends Crm_Controller
     if ($row != NULL) {
       $data['row'] = $row;
       $data['services'] = $this->book_m->getBookingServices($filter)->result();
+      $data['bayar_dp'] = $this->book_m->getBookingPembayaranDp($filter)->row();
+      // send_json($data);
       $this->template_portal($data);
     } else {
       $this->session->set_flashdata(msg_not_found());
@@ -210,5 +214,92 @@ class List_booking extends Crm_Controller
     $fbook = ['select' => 'calendar_view'];
     $data = $this->book_m->getBooking($fbook)->result();
     send_json($data);
+  }
+
+  public function saveBuktiPembayaranDP()
+  {
+    $user = user();
+    $post = $this->input->post();
+    $id_booking       = $this->input->post('id_booking');
+
+    //Cek Data Booking
+    $filter = [
+      'id_booking' => $id_booking,
+      'response_validate' => true
+    ];
+    $this->book_m->getBooking($filter);
+
+
+    $bukti_pembayaran = $this->_upload_bukti_pembayaran("$id_booking-dp");
+
+    $insert = [
+      'id_booking'         => $id_booking,
+      'metode_pembayaran'  => $post['metode_pembayaran'],
+      'nama_bank'          => $post['nama_bank'],
+      'jenis_pembayaran'   => 'dp',
+      'waktu_pembayaran'   => $post['waktu_pembayaran'],
+      'nominal_pembayaran' => $post['nominal_pembayaran'],
+      'bukti_pembayaran'   => $bukti_pembayaran == true ? $bukti_pembayaran['bukti_pembayaran'] : null,
+      'created_at' => waktu(),
+      'created_by' => $user->id_user,
+    ];
+    $upd_header = [
+      'status'     => 'dp_lunas',
+      'updated_at' => waktu(),
+      'updated_by' => $user->id_user,
+    ];
+
+    $tes = [
+      'insert' => $insert,
+      'upd_header' => $upd_header,
+    ];
+    // send_json($tes);
+    $this->db->trans_begin();
+    $this->db->insert('booking_pembayaran', $insert);
+
+    $filter = ['id_booking' => $id_booking];
+    $this->db->update('booking', $upd_header, $filter);
+
+    if ($this->db->trans_status() === FALSE) {
+      $this->db->trans_rollback();
+      $response = ['status' => 0, 'pesan' => 'Telah terjadi kesalahan !'];
+    } else {
+      $this->db->trans_commit();
+      $response = [
+        'status' => 1,
+        'url' => site_url(get_slug())
+      ];
+      $this->session->set_flashdata(msg_sukses('Bukti Pembayaran DP ID Booking : ' . $id_booking . ' Berhasil Disimpan'));
+    }
+    send_json($response);
+  }
+
+  function _upload_bukti_pembayaran($id)
+  {
+    $this->load->library('upload');
+    $path = "./uploads/bukti-pembayaran";
+    if (!is_dir($path)) {
+      mkdir($path, 0777, true);
+    }
+
+    $config['upload_path']      = $path;
+    $config['allowed_types']    = 'jpg|png|jpeg|bmp|gif';
+    $config['max_size']         = '1024';
+    $config['max_width']        = '3000';
+    $config['max_height']       = '3000';
+    $config['remove_spaces']    = TRUE;
+    $config['overwrite']        = TRUE;
+    $config['file_ext_tolower'] = TRUE;
+    $config['file_name']        = $id;
+    $this->upload->initialize($config);
+    if ($this->upload->do_upload('bukti_pembayaran')) {
+      $new_path = substr($path, 2, 40);
+      $filename = $this->upload->file_name;
+      $dt['bukti_pembayaran'] = $new_path . '/' . $filename;
+      return $dt;
+    } else {
+      // $response = ['status' => 0, 'pesan' => $this->upload->display_errors()];
+      // send_json($response);
+    }
   }
 }

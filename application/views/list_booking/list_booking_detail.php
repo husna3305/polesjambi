@@ -95,74 +95,9 @@ if ($mode == 'detail') {
           </div>
           <!--/row-->
           <!-- timeline item 2 -->
-          <div class="row">
-            <div class="col-auto text-center flex-column d-none d-sm-flex">
-              <div class="row h-50">
-                <div class="col border-end">&nbsp;</div>
-                <div class="col">&nbsp;</div>
-              </div>
-              <h5 class="m-2">
-                <span class="badge rounded-pill <?= $row->status == 'menunggu_pembayaran' ? 'bg-primary' : 'bg-light border' ?>">&nbsp;</span>
-              </h5>
-              <?php if ($row->status != 'menunggu_pembayaran') { ?>
-                <div class="row h-50">
-                  <div class="col border-end">&nbsp;</div>
-                  <div class="col">&nbsp;</div>
-                </div>
-              <?php } ?>
-            </div>
-            <div class="col py-2">
-              <div class="card border-primary shadow radius-15">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <h6>Pembayaran DP Booking </h6>
-                      <?php if ($row->status == 'menunggu_pembayaran') { ?>
-                        <button type="button" class="btn btn-primary px-2 radius-30 btn-sm">Menunggu Pembayaran</button>
-                      <?php } else { ?>
-                        <button type="button" class="btn btn-success px-2 radius-30 btn-sm mb-2">Lunas</button>
-                        <br>
-                        <button type="button" class="btn btn-primary px-5 btn-sm2" onclick="showModalPreviewImages()">Bukti Transfer</button>
-                      <?php } ?>
-                      <br><br>
-                      <div class="card" style="background-color:#f4f4f4">
-                        <div class="card-body">
-                          <ul class="list-group list-group-flush radius-10">
-                            <li class="list-group-item d-flex align-items-center radius-10 mb-2 shadow-sm">
-                              <div class="d-flex align-items-center">
-                                <div class="flex-grow-1 ms-2">
-                                  <h7 class="mb-0">Total DP</h7>
-                                </div>
-                              </div>
-                              <div class="ms-auto"><?= mata_uang_rp($row->total_dp) ?></div>
-                            </li>
-                            <li class="list-group-item d-flex align-items-center radius-10 mb-2 shadow-sm">
-                              <div class="d-flex align-items-center">
-                                <div class="flex-grow-1 ms-2">
-                                  <h7 class="mb-0">Nominal Unik</h7>
-                                </div>
-                              </div>
-                              <div class="ms-auto"><?= mata_uang_rp($row->nominal_unik) ?></div>
-                            </li>
-                            <hr>
-                            <li class="list-group-item d-flex align-items-center radius-10 mb-2 shadow-sm">
-                              <div class="d-flex align-items-center">
-                                <div class="flex-grow-1 ms-2">
-                                  <h6 class="mb-0">Total DP</h6>
-                                </div>
-                              </div>
-                              <div class="ms-auto"><?= mata_uang_rp($row->grand_tot_dp) ?></div>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <?php
+          $data = ['row' => $row, 'bayar_dp' => $bayar_dp];
+          $this->load->view('list_booking/list_booking_pembayaran_dp', $data); ?>
           <!--/row-->
         </div>
       </div>

@@ -68,7 +68,7 @@ class Booking_model extends CI_Model
     if (isset($filter['response_validate'])) {
       $data = $data->row();
       if ($data == NULL) {
-        $response = ['status' => 0, 'pesan' => 'Data booking tidak ditemukan'];
+        $response = ['status' => 0, 'pesan' => 'ID Booking :' . $filter['id_booking'] . ' Tidak Ditemukan'];
         send_json($response);
       } else {
         return $data;
@@ -135,6 +135,65 @@ class Booking_model extends CI_Model
     } else {
       return $data;
     }
+  }
+  function getBookingPembayaran($filter = null)
+  {
+    $where = 'WHERE 1=1';
+    $select = "bbyr.*";
+    if ($filter != null) {
+      $filter = $this->db->escape_str($filter);
+      if (isset($filter['id_booking'])) {
+        if ($filter['id_booking'] != '') {
+          $where .= " AND book.id_booking='{$filter['id_booking']}'";
+        }
+      }
+      if (isset($filter['jenis_pembayaran'])) {
+        if ($filter['jenis_pembayaran'] != '') {
+          $where .= " AND bbyr.jenis_pembayaran='{$filter['jenis_pembayaran']}'";
+        }
+      }
+    }
+
+    $order_data = '';
+    if (isset($filter['order'])) {
+      $order = $filter['order'];
+      $order_column = [null, 'merk_mobil', 'aktif', null];
+      if ($order != '') {
+        $order_clm  = $order_column[$order['0']['column']];
+        $order_by   = $order['0']['dir'];
+        $order_data = " ORDER BY $order_clm $order_by ";
+      }
+    }
+
+    $limit = '';
+    if (isset($filter['limit'])) {
+      $limit = $filter['limit'];
+    }
+
+    $data = $this->db->query("SELECT $select
+    FROM booking_pembayaran AS bbyr
+    JOIN booking book ON book.id_booking=bbyr.id_booking
+    $where
+    $order_data
+    $limit
+    ");
+    if (isset($filter['response_validate'])) {
+      $data = $data->row();
+      if ($data == NULL) {
+        $response = ['status' => 0, 'pesan' => 'Data pembayaran booking tidak ditemukan'];
+        send_json($response);
+      } else {
+        return $data;
+      }
+    } else {
+      return $data;
+    }
+  }
+
+  function getBookingPembayaranDp($id_booking)
+  {
+    $filter['jenis_pembayaran'] = 'dp';
+    return $this->getBookingPembayaran($filter);
   }
 
   function getID()

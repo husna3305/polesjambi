@@ -235,9 +235,9 @@
     timePickerIncrement: 1,
     singleDatePicker: true,
     timePicker24Hour: true,
-    timePickerSeconds: true,
+    timePickerSeconds: false,
     isInvalidDate: false,
-    autoUpdateInput: false,
+    autoUpdateInput: true,
     startDate: moment().startOf('seconds'),
     locale: {
       cancelLabel: 'Clear',

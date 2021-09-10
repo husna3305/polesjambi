@@ -97,6 +97,10 @@ function msg_error($pesan)
 {
   return ['status' => 'error', 'title' => 'Peringatan', 'text' => $pesan];
 }
+function msg_sukses($text)
+{
+  return  ['status' => 'success', 'title' => 'Informasi', 'text' => $text];
+}
 function msg_sukses_simpan()
 {
   return  ['status' => 'success', 'title' => 'Informasi', 'text' => 'Data berhasil disimpan'];
@@ -219,8 +223,10 @@ function get_slug($cek = false)
   $links[] = 'saveData';
   $links[] = 'saveEdit';
   $links[] = 'insert';
+  $links[] = 'detail';
   $links[] = 'saveRoleAkses';
   $links[] = 'saveDataFileToDB';
+  $links[] = 'saveBuktiPembayaranDP';
 
   if ($CI->uri->segment(2) != NULL) {
     $seg2 = $CI->uri->segment(2);
@@ -255,15 +261,24 @@ function get_controller()
 {
   $CI = &get_instance();
   $segment =  $CI->uri->segment(1);
-  if ($CI->uri->segment(2) != '') {
-    $segment .= '/' . $CI->uri->segment(2);
-  }
   $links = array_keys(links_on_table());
   $links[] = 'fetchData';
   $links[] = 'saveData';
   $links[] = 'saveEdit';
   $links[] = 'insert';
+  $links[] = 'detail';
   $links[] = 'role_akses';
+  $links[] = 'saveBuktiPembayaranDP';
+  $links[] = 'saveRoleAkses';
+  $links[] = 'saveDataFileToDB';
+
+  if ($CI->uri->segment(2) != '') {
+    $seg2 = $CI->uri->segment(2);
+    if (!in_array($seg2, $links)) {
+      $segment .= "/$seg2";
+    }
+  }
+
   if ($CI->uri->segment(3) != NULL) {
     $seg3 = $CI->uri->segment(3);
     if (!in_array($seg3, $links)) {
