@@ -49,7 +49,7 @@
 </head>
 
 <body>
-  <div class="jumbotron"style="background-image: url(<?= base_url('assets/front/') ?>assets/img/background.jpg)" >
+  <div class="jumbotron" style="background-image: url(<?= base_url('assets/front/') ?>assets/img/background.jpg)">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-6">
@@ -126,7 +126,7 @@
               </select>
               <label for="kabupaten">Kota</label>
               <select id="kabupaten_id" name="kabupaten_id" class="form-control" style="width:100%">
-                <option selected value='1501'>Kota Jambi</option>
+                <option selected value='1571'>Kota Jambi</option>
               </select>
               <label for="kecamatan_id">Kecamatan</label>
               <select id="kecamatan_id" name="kecamatan_id" class="form-control" style="width:100%">

@@ -48,6 +48,10 @@
       text-align: right
     }
 
+    .left {
+      text-align: left
+    }
+
     .pr-5 {
       padding-right: 15px;
     }

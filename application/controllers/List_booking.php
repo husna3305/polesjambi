@@ -43,15 +43,26 @@ class List_booking extends Crm_Controller
         </div>
       </div>
       <div class="ms-auto">';
-      if ($rs->status == 'menunggu_pembayaran') {
-        $html .= '<button type="button" class="btn btn-outline-primary btn-sm">Menunggu Pembayaran</button>';
-      } elseif ($rs->status == 'dp_lunas') {
-        $html .= '<button type="button" class="btn btn-outline-success btn-sm">Pembayaran DP Lunas</button>';
-      } elseif ($rs->status == 'menunggu_kedatangan') {
-        $html .= '<button type="button" class="btn btn-outline-info btn-sm">Menunggu Kedatangan</button>';
-      } elseif ($rs->status == 'sedang_dikerjakan') {
-        $html .= '<button type="button" class="btn btn-outline-info btn-sm">Sedang Dikerjakan</button>';
+      $html .= '<div class="btn-group-vertical" role="group">';
+      $selesai_bayar_dp = $rs->status == 'menunggu_pembayaran' ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : '<i class="fa fa-check"></i>';
+      $button = '<button type="button" class="btn btn-outline-primary btn-sm left">' . $selesai_bayar_dp . ' Menunggu Pembayaran</i></button>';
+      if ($rs->status != 'menunggu_pembayaran') {
+        $button .= '<button type="button" class="btn btn-outline-success btn-sm left"><i class="fa fa-check"></i> DP Lunas</i></button>';
       }
+      if (($rs->status == 'menunggu_kedatangan')) {
+        $button .= '<button type="button" class="btn btn-outline-info btn-sm left"><i class="fa fa-check"></i> Menunggu Kedatangan</i></button>';
+      }
+      if (($rs->status == 'sedang_dikerjakan')) {
+        $button .= '<button type="button" class="btn btn-outline-info btn-sm left"><i class="fa fa-check"></i> Sedang Dikerjakan</i></button>';
+      }
+      if (($rs->status == 'selesai_dikerjakan')) {
+        $button .= '<button type="button" class="btn btn-outline-info btn-sm left"><i class="fa fa-check"></i> Selesai Dikerjakan</i></button>';
+      }
+      if (($rs->status == 'selesai')) {
+        $button = '<button type="button" class="btn btn-outline-success btn-sm left"><i class="fa fa-check"></i> Selesai</i></button>';
+      }
+      $html .= $button;
+      $html .= '</div>';
       $html .= '<!-- <div class="btn-group">
                   <button type="button" class="btn btn-outline-secondary btn-sm">Action</button>
                   <button type="button" class="btn btn-outline-secondary split-bg-outline-secondary dropdown-toggle dropdown-toggle-split btn-sm" data-bs-toggle="dropdown" aria-expanded="false">	<span class="visually-hidden">Toggle Dropdown</span>

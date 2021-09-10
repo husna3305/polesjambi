@@ -190,7 +190,7 @@ class Booking_model extends CI_Model
     }
   }
 
-  function getBookingPembayaranDp($id_booking)
+  function getBookingPembayaranDp($filter)
   {
     $filter['jenis_pembayaran'] = 'dp';
     return $this->getBookingPembayaran($filter);

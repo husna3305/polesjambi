@@ -10,9 +10,9 @@ if ($bayar_dp != null) {
       <div class="col">&nbsp;</div>
     </div>
     <h5 class="m-2">
-      <span class="badge rounded-pill <?= $row->status == 'menunggu_pembayaran' ? 'bg-primary' : 'bg-light border' ?>">&nbsp;</span>
+      <span class="badge rounded-pill <?= ($row->status == 'menunggu_pembayaran' || $row->status == 'dp_lunas') == true ? 'bg-primary' : 'bg-light border' ?>">&nbsp;</span>
     </h5>
-    <?php if ($row->status != 'menunggu_pembayaran') { ?>
+    <?php if (($row->status == 'menunggu_pembayaran' || $row->status == 'dp_lunas') == false) { ?>
       <div class="row h-50">
         <div class="col border-end">&nbsp;</div>
         <div class="col">&nbsp;</div>
