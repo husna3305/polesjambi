@@ -10,9 +10,9 @@ if ($bayar_dp != null) {
       <div class="col">&nbsp;</div>
     </div>
     <h5 class="m-2">
-      <span class="badge rounded-pill <?= ($row->status == 'menunggu_pembayaran' || $row->status == 'dp_lunas') == true ? 'bg-primary' : 'bg-light border' ?>">&nbsp;</span>
+      <span class="badge rounded-pill <?= ($row->status == 'menunggu_kedatangan' || $row->status == 'dp_lunas') == true ? 'bg-primary' : 'bg-light border' ?>">&nbsp;</span>
     </h5>
-    <?php if (($row->status == 'menunggu_pembayaran' || $row->status == 'dp_lunas') == false) { ?>
+    <?php if (($row->status == 'menunggu_kedatangan' || $row->status == 'dp_lunas') == false) { ?>
       <div class="row h-50">
         <div class="col border-end">&nbsp;</div>
         <div class="col">&nbsp;</div>
@@ -24,14 +24,12 @@ if ($bayar_dp != null) {
       <div class="card-body">
         <div class="row mb-3">
           <div class="col-sm-8">
-            <h6>Pembayaran DP Booking </h6>
+            <h6>Pengerjaan </h6>
           </div>
           <div class="col-sm-4" align='right'>
-            <?php if ($row->status == 'menunggu_pembayaran') {
-              $text_btn = "<i class='fa fa-upload'></i> Upload Bukti Pembayaran"; ?>
-              <button type="button" class="btn btn-primary px-2 radius-30 btn-sm">Menunggu Pembayaran</button>
-            <?php } else {
-              $text_btn = "Bukti Pembayaran"; ?>
+            <?php if ($row->status == 'menunggu_kedatangan') { ?>
+              <button type="button" class="btn btn-info px-2 radius-30 btn-sm ">Menunggu Kedatangan</button>
+            <?php } else { ?>
               <button type="button" class="btn btn-success px-2 radius-30 btn-sm">Lunas</button>
             <?php } ?>
           </div>
@@ -40,7 +38,7 @@ if ($bayar_dp != null) {
           <div class="col-sm-12">
             <div class="card" style="background-color:#f4f4f4">
               <div class="card-header">
-                <button type="button" class="btn btn-success btn-sm2 mb-1 mt-1" data-bs-target="#content_upload_pembayaran" data-bs-toggle="collapse"><?= $text_btn ?></button>
+                <button type="button" class="btn btn-success btn-sm2 mb-1 mt-1" data-bs-target="#content_upload_pembayaran" data-bs-toggle="collapse">s</button>
               </div>
               <div class="collapse" id="content_upload_pembayaran">
                 <div class="card-body">
@@ -132,7 +130,7 @@ if ($bayar_dp != null) {
                         <h6 class="mb-0">Total DP</h6>
                       </div>
                     </div>
-                    <div class="ms-auto"><b><?= mata_uang_rp($row->grand_tot_dp) ?></b></div>
+                    <div class="ms-auto"><?= mata_uang_rp($row->grand_tot_dp) ?></div>
                   </li>
                 </ul>
               </div>

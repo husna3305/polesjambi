@@ -2,7 +2,7 @@
 
 use GO\Scheduler;
 
-class Tes extends CI_Controller
+class Auto_updated_status extends CI_Controller
 {
 
   public function __construct()
@@ -11,6 +11,10 @@ class Tes extends CI_Controller
   }
 
   public function index()
+  {
+    //Cek Status Sudah Lu
+  }
+  public function scheduler()
   {
     $scheduler = new Scheduler();
     $scheduler->call(function () {

@@ -45,6 +45,7 @@ class Services extends Crm_Controller
       $sub_array   = array();
       $sub_array[] = $no;
       $sub_array[] = $html;
+      $sub_array[] = $rs->kategori;
       $sub_array[] = mata_uang_rp($rs->estimasi_biaya);
       $sub_array[] = $rs->estimasi_waktu_jam . ':' . $rs->estimasi_waktu_menit;
       $sub_array[] = $aktif;
@@ -114,12 +115,13 @@ class Services extends Crm_Controller
     }
 
     $insert = [
-      'id_services' => $id,
-      'judul' => $post['judul'],
-      'deskripsi' => $post['deskripsi'],
-      'estimasi_biaya' => $post['estimasi_biaya'],
-      'estimasi_waktu_jam' => $post['estimasi_waktu_jam'],
+      'id_services'          => $id,
+      'judul'                => $post['judul'],
+      'deskripsi'            => $post['deskripsi'],
+      'estimasi_biaya'       => $post['estimasi_biaya'],
+      'estimasi_waktu_jam'   => $post['estimasi_waktu_jam'],
       'estimasi_waktu_menit' => $post['estimasi_waktu_menit'],
+      'kategori'             => $post['kategori'],
       'aktif'      => isset($_POST['aktif']) ? 1 : 0,
       'created_at' => waktu(),
       'created_by' => $user->id_user,
@@ -206,11 +208,12 @@ class Services extends Crm_Controller
       send_json($response);
     }
     $update = [
-      'judul' => $post['judul'],
-      'deskripsi' => $post['deskripsi'],
-      'estimasi_biaya' => $post['estimasi_biaya'],
-      'estimasi_waktu_jam' => $post['estimasi_waktu_jam'],
+      'judul'                => $post['judul'],
+      'deskripsi'            => $post['deskripsi'],
+      'estimasi_biaya'       => $post['estimasi_biaya'],
+      'estimasi_waktu_jam'   => $post['estimasi_waktu_jam'],
       'estimasi_waktu_menit' => $post['estimasi_waktu_menit'],
+      'kategori'             => $post['kategori'],
       'aktif'      => isset($_POST['aktif']) ? 1 : 0,
       'updated_at' => waktu(),
       'updated_by' => $user->id_user,

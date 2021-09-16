@@ -41,8 +41,10 @@
       <div class="row justify-content-center" id="form_">
         <div class="col-md-12 mb-5 box-service">
           <h2 class="mt-3">Pilih Services</h2>
+          <h4>Interior</h4>
+          <hr>
           <div class="row mt-4">
-            <div class="col-sm-12 col-md-4 mb-4" v-for="(srv, index) of services">
+            <div class="col-sm-12 col-md-4 mb-4" v-for="(srv, index) of services" v-if="srv.kategori=='Interior'">
               <div :class="srv.dipilih==0?'category-service':'category-service category-service-selected'">
                 <img v-bind:src="'<?= base_url() ?>'+srv.gambar_small" alt="car" />
                 <p class="choose-services">{{srv.judul}}</p>
@@ -57,7 +59,25 @@
               </div>
             </div>
           </div>
-          <div class="row justify-content-end">
+          <h4>Eksterior</h4>
+          <hr>
+          <div class="row mt-4">
+            <div class="col-sm-12 col-md-4 mb-4" v-for="(srv, index) of services" v-if="srv.kategori=='Eksterior'">
+              <div :class="srv.dipilih==0?'category-service':'category-service category-service-selected'">
+                <img v-bind:src="'<?= base_url() ?>'+srv.gambar_small" alt="car" />
+                <p class="choose-services">{{srv.judul}}</p>
+                <p class="price text-danger">Rp. {{srv.estimasi_biaya | toCurrency}}</p>
+                <p class="description"><i class="far fa-clock"></i><span v-if="srv.estimasi_waktu_jam>0">{{srv.estimasi_waktu_jam}} Jam,</span> <span>{{srv.estimasi_waktu_menit}} Menit</span></p>
+                <button type="button" :class="classBtnPilih(index)" @click.prevent="pilihServices(index)">
+                  <p class="teks">{{labelBtnPilih(index)}} <span v-if="srv.dipilih==1"><i class="fa fa-check"></i></span></p>
+                </button>
+                <button type="button" class="btn btn-detail" @click.prevent="showModalServices(srv.id_services)">
+                  <p class="teks text-warning">Detail</p>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-end mt-5">
             <button @click.prevent="nextPage()" id="btnNextPage" class="btn btn-primary btn-next active next" role="button" aria-pressed="true">Next</button>
           </div>
         </div>

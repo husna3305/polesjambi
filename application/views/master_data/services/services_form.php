@@ -42,6 +42,31 @@ if ($mode == 'detail') {
             </div>
           </div>
           <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Kategori</label>
+              <div class="form-input">
+                <select class='form-control' name='kategori'>
+                  <?php $kategori = [
+                    ['value' => '', 'text' => 'Pilih'],
+                    ['value' => 'Eksterior', 'text' => 'Eksterior'],
+                    ['value' => 'Interior', 'text' => 'Interior'],
+                  ];
+                  foreach ($kategori as $ktg) {
+                    $selected = '';
+                    if (isset($row)) {
+                      if ($ktg['value'] == $row->kategori) {
+                        $selected = 'selected';
+                      }
+                    }
+                  ?>
+                    <option value="<?= $ktg['value'] ?>" <?= $selected ?>><?= $ktg['text'] ?></option>
+                  <?php }
+                  ?>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
             <div class="col-md-12">
               <label class="form-label">Deskripsi</label>
               <div class="form-input">

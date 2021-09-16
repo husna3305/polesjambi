@@ -28,6 +28,7 @@
               <tr>
                 <th width="8%">#</th>
                 <th>Services</th>
+                <th>Kategori</th>
                 <th>Harga</th>
                 <th>Estimasi Waktu Pengerjaan</th>
                 <th width='12%'>Aktif</th>
@@ -66,15 +67,15 @@
         },
       },
       "columnDefs": [{
-          "targets": [0, 5],
+          "targets": [0, 6],
           "orderable": false
         },
         {
-          "targets": [4, 5],
+          "targets": [5, 6],
           "className": 'text-center'
         },
         {
-          "targets": [2],
+          "targets": [3],
           "className": 'right'
         },
         // // { "targets":[0],"checkboxes":{'selectRow':true}}

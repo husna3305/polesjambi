@@ -98,6 +98,9 @@ if ($mode == 'detail') {
           <?php
           $data = ['row' => $row, 'bayar_dp' => $bayar_dp];
           $this->load->view('list_booking/list_booking_pembayaran_dp', $data); ?>
+          <?php
+          $data = ['row' => $row];
+          $this->load->view('list_booking/list_booking_pengerjaan', $data); ?>
           <!--/row-->
         </div>
       </div>

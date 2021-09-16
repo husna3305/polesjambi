@@ -112,93 +112,6 @@ class List_booking extends Crm_Controller
     $this->template_portal($data);
   }
 
-  public function saveData()
-  {
-    $user = user();
-    $this->load->library('upload');
-    $post     = $this->input->post();
-
-    $insert = [
-      'merk_mobil' => $post['merk_mobil'],
-      'aktif'      => isset($_POST['aktif']) ? 1 : 0,
-      'created_at' => waktu(),
-      'created_by' => $user->id_user,
-    ];
-
-    $tes = ['insert' => $insert];
-    // send_json($tes);
-    $this->db->trans_begin();
-    $this->db->insert('ms_merk_mobil', $insert);
-    if ($this->db->trans_status() === FALSE) {
-      $this->db->trans_rollback();
-      $response = ['status' => 0, 'pesan' => 'Telah terjadi kesalahan !'];
-    } else {
-      $this->db->trans_commit();
-      $response = [
-        'status' => 1,
-        'url' => site_url(get_slug())
-      ];
-      $this->session->set_flashdata(msg_sukses_simpan());
-    }
-    send_json($response);
-  }
-
-  public function edit()
-  {
-    $data['title'] = 'Edit ' . $this->title;
-    $data['file']  = 'list_booking_form';
-    $data['mode']  = 'edit';
-    $params = get_params($this->input->get(), true);
-    $filter['id_merk_mobil']  = $params['id'];
-    $row = $this->mbl_m->getMerkMobil($filter)->row();
-    if ($row != NULL) {
-      $data['row'] = $row;
-      $this->template_portal($data);
-    } else {
-      $this->session->set_flashdata(msg_not_found());
-      redirect(get_slug());
-    }
-  }
-
-  public function saveEdit()
-  {
-    $user = user();
-    $this->load->library('upload');
-    $post     = $this->input->post();
-    $filter = ['id_merk_mobil' => $this->input->post('id_merk_mobil')];
-    $row = $this->mbl_m->getMerkMobil($filter)->row();
-    if ($row == NULL) {
-      $result = [
-        'status' => 0,
-        'pesan' => 'Data tidak ditemukan'
-      ];
-      send_json($result);
-    }
-    $update = [
-      'merk_mobil' => $post['merk_mobil'],
-      'aktif'        => isset($_POST['aktif']) ? 1 : 0,
-      'updated_at'   => waktu(),
-      'updated_by'   => $user->id_user,
-    ];
-
-    $tes = ['update' => $update];
-    // send_json($tes);
-    $this->db->trans_begin();
-    $this->db->update('ms_merk_mobil', $update, $filter);
-    if ($this->db->trans_status() === FALSE) {
-      $this->db->trans_rollback();
-      $response = ['status' => 0, 'pesan' => 'Telah terjadi kesalahan !'];
-    } else {
-      $this->db->trans_commit();
-      $response = [
-        'status' => 1,
-        'url' => site_url(get_slug())
-      ];
-      $this->session->set_flashdata(msg_sukses_update());
-    }
-    send_json($response);
-  }
-
   public function detail()
   {
     $data['title'] = 'Detail ' . $this->title;
@@ -238,7 +151,7 @@ class List_booking extends Crm_Controller
       'id_booking' => $id_booking,
       'response_validate' => true
     ];
-    $this->book_m->getBooking($filter);
+    $book = $this->book_m->getBooking($filter);
 
 
     $bukti_pembayaran = $this->_upload_bukti_pembayaran("$id_booking-dp");
@@ -260,6 +173,9 @@ class List_booking extends Crm_Controller
       'updated_by' => $user->id_user,
     ];
 
+    if ($book->tanggal_booking == tanggal()) {
+      $upd_header['status'] = 'menunggu_kedatangan';
+    }
     $tes = [
       'insert' => $insert,
       'upd_header' => $upd_header,

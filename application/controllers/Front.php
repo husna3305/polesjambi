@@ -77,6 +77,7 @@ class Front extends Crm_Controller
           $tot_biaya += $dt_svc->estimasi_biaya;
         }
       }
+      $jadwal_booking = explode(' ', $this->input->post('jadwal_booking'));
       $book = [
         'id_booking'      => $id_booking,
         'no_polisi'       => $this->input->post('no_polisi'),
@@ -84,8 +85,8 @@ class Front extends Crm_Controller
         'no_wa'           => $this->input->post('no_wa'),
         'id_merk_mobil'   => $this->input->post('id_merk_mobil'),
         'id_jenis_mobil'  => $this->input->post('id_jenis_mobil'),
-        'tanggal_booking' => $this->input->post('tanggal_booking'),
-        'jam_booking'     => $this->input->post('jam_booking') . ':' . $this->input->post('menit_booking'),
+        'tanggal_booking' => $jadwal_booking[0],
+        'jam_booking'     => $jadwal_booking[1],
         'alamat'          => $this->input->post('alamat'),
         'provinsi_id'     => $this->input->post('provinsi_id'),
         'kabupaten_id'    => $this->input->post('kabupaten_id'),

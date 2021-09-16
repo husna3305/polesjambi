@@ -19,7 +19,7 @@ class Services_model extends CI_Model
       if ($filter['select'] == 'dropdown') {
         $select = "id_services id, judul text";
       } elseif ($filter['select'] == 'for_booking_services') {
-        $select = "id_services,judul,CASE WHEN IFNULL($gambar_small,'')='' THEN 'assets/images/logo-icon.png' ELSE $gambar_small END gambar_small,estimasi_biaya,estimasi_waktu_menit,estimasi_waktu_jam,0 dipilih";
+        $select = "id_services,judul,CASE WHEN IFNULL($gambar_small,'')='' THEN 'assets/images/logo-icon.png' ELSE $gambar_small END gambar_small,estimasi_biaya,estimasi_waktu_menit,estimasi_waktu_jam,0 dipilih,kategori";
       } elseif ($filter['select'] == 'for_booking_services_details') {
         $select = "id_services,judul,deskripsi";
       }

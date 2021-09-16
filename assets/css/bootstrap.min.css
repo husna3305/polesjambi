@@ -2711,12 +2711,12 @@ fieldset:disabled .btn {
   border-color: #146c43;
 }
 .btn-info {
-  color: #000;
+  color: #fff;
   background-color: #0dcaf0;
   border-color: #0dcaf0;
 }
 .btn-info:hover {
-  color: #000;
+  color: #fff;
   background-color: #31d2f2;
   border-color: #25cff2;
 }

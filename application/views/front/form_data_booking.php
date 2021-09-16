@@ -83,41 +83,13 @@
             </div>
             <div class="form-group">
               <label for="jadwal">Jadwal Booking</label>
-              <input class='datepicker form-control' name="tanggal_booking" readonly />
+              <input class='datetimepicker form-control' name="jadwal_booking" readonly />
             </div>
             <div class="form-group">
-              <label for="inputjam">Jadwal Booking (JAM & MENIT)</label>
-              <br>
-              <select id="inputjam" name="jam_booking" class="form-control" style="width: 40%; display: inline-flex;">
-                <option selected disabled>Jam</option>
-                <option>08</option>
-                <option>09</option>
-                <option>10</option>
-                <option>11</option>
-                <option>12</option>
-                <option>13</option>
-                <option>14</option>
-                <option>15</option>
-                <option>16</option>
-                <option>17</option>
-              </select>
-              <select id="inputMenit" name="menit_booking" class="form-control" style="width: 40%; display: inline-flex;">
-                <option selected disabled>Menit</option>
-                <option>00</option>
-                <option>05</option>
-                <option>10</option>
-                <option>15</option>
-                <option>20</option>
-                <option>25</option>
-                <option>30</option>
-                <option>35</option>
-                <option>40</option>
-                <option>45</option>
-                <option>50</option>
-                <option>55</option>
-              </select>
+              <label for="jadwal">Apakah Ingin Dijemput</label>&nbsp;&nbsp;&nbsp;
+              <input type="checkbox" v-model="dijemput" />
             </div>
-            <div class="form-group">
+            <div class="form-group" v-if="dijemput==true">
               <label for="alamat">Alamat ( Jika antar jemput )</label>
               <textarea class="form-control" id="alamat" rows="5" name="alamat"></textarea>
               <label for="provinsi">Provinsi</label>
@@ -229,6 +201,7 @@
   var form_ = new Vue({
     el: '#form_',
     data: {
+      dijemput: false,
       no_polisi: '',
       nama_lengkap: '',
       no_wa: '',
@@ -323,6 +296,37 @@
   $('.datepicker').on('cancel.daterangepicker', function(ev, picker) {
     $(this).val('');
   });
+  $('.datetimepicker').daterangepicker({
+    timePicker: true,
+    minDate: today,
+    maxDate: endDate,
+    timePickerIncrement: 1,
+    singleDatePicker: true,
+    timePicker24Hour: true,
+    timePickerSeconds: false,
+    isInvalidDate: false,
+    autoUpdateInput: true,
+    startDate: moment().startOf('seconds'),
+    locale: {
+      cancelLabel: 'Clear',
+      format: 'YYYY-MM-DD HH:mm',
+      //  monthNames: [
+      //    "Januari",
+      //    "Februari",
+      //    "Maret",
+      //    "April",
+      //    "Mei",
+      //    "Juni",
+      //    "Jul",
+      //    "Agustus",
+      //    "September",
+      //    "Oktober",
+      //    "November",
+      //    "Desember"
+      //  ]
+    },
+
+  })
 </script>
 
 </html>
