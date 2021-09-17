@@ -1,5 +1,6 @@
 <link href="<?= base_url() ?>assets/plugins/fullcalendar/css/main.min.css" rel="stylesheet" />
 <script src="<?= base_url() ?>assets/plugins/fullcalendar/js/main.min.js"></script>
+
 <div class="page-wrapper">
   <div class="page-content">
     <div class="row">

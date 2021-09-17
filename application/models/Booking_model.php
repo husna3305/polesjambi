@@ -80,12 +80,18 @@ class Booking_model extends CI_Model
   function getBookingServices($filter = null)
   {
     $where = 'WHERE 1=1';
-    $select = "bserv.*,srv.judul";
+    $tot_detailers = "SELECT COUNT(id_services) FROM booking_detailer WHERE id_booking=bserv.id_booking AND id_services=bserv.id_services";
+    $select = "bserv.*,srv.judul,($tot_detailers) tot_detailers";
     if ($filter != null) {
       $filter = $this->db->escape_str($filter);
       if (isset($filter['id_booking'])) {
         if ($filter['id_booking'] != '') {
           $where .= " AND book.id_booking='{$filter['id_booking']}'";
+        }
+      }
+      if (isset($filter['id_services'])) {
+        if ($filter['id_services'] != '') {
+          $where .= " AND bserv.id_services='{$filter['id_services']}'";
         }
       }
       if (isset($filter['search'])) {

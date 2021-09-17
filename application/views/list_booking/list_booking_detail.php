@@ -1,3 +1,22 @@
+<script src="<?= base_url() ?>assets/plugins/vue/vue.min.js"></script>
+<script src="<?= base_url() ?>assets/plugins/vue/accounting.js"></script>
+<script src="<?= base_url() ?>assets/plugins/vue/vue-numeric.min.js"></script>
+<script>
+  Vue.use(VueNumeric.default);
+  Vue.filter('toCurrency', function(value) {
+    return accounting.formatMoney(value, "", 0, ".", ",");
+    return value;
+  });
+</script>
+<style>
+  .detailers-dipilih {
+    background-color: #d1e2fd !important;
+    margin-top: -.25rem;
+    margin-bottom: .25rem;
+    -webkit-box-shadow: 0 .5rem 1rem 0 rgba(0, 0, 0, .2);
+    box-shadow: 0 .25rem .5rem 0 rgba(0, 0, 0, .2)
+  }
+</style>
 <?php
 $disabled = '';
 $form = '';
@@ -100,7 +119,9 @@ if ($mode == 'detail') {
           $this->load->view('list_booking/list_booking_pembayaran_dp', $data); ?>
           <?php
           $data = ['row' => $row];
-          $this->load->view('list_booking/list_booking_pengerjaan', $data); ?>
+          if ($row->status == 'dp_lunas' || $row->status == 'menunggu_kedatangan' || $row->status == 'sedang_dikerjakan') {
+            $this->load->view('list_booking/list_booking_pengerjaan', $data);
+          } ?>
           <!--/row-->
         </div>
       </div>

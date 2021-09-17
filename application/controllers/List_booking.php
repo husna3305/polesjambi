@@ -9,6 +9,7 @@ class List_booking extends Crm_Controller
     parent::__construct();
     if (!logged_in()) redirect('auth/login');
     $this->load->model('booking_model', 'book_m');
+    $this->load->model('services_model', 'serv_m');
   }
 
   public function index()
@@ -228,5 +229,139 @@ class List_booking extends Crm_Controller
       // $response = ['status' => 0, 'pesan' => $this->upload->display_errors()];
       // send_json($response);
     }
+  }
+
+  function getDetailersVsServices()
+  {
+    $id_booking = $this->input->post('id_booking');
+    $id_services = $this->input->post('id_services');
+    $dipilih = "SELECT COUNT(id_detailer) FROM booking_detailer WHERE id_booking=$id_booking AND id_services=$id_services AND id_detailer=mu.id_detailer";
+    $data = $this->db->query("SELECT id_detailer,nama_detailer,($dipilih) dipilih,CASE WHEN IFNULL(mu.gambar_small,'')='' THEN 'assets/images/avatars/avatar.png' ELSE mu.gambar_small END gambar_small FROM ms_detailer mu")->result();
+    $fserv = ['id_booking' => $id_booking, 'id_services' => $id_services];
+    $srv = $this->book_m->getBookingServices($fserv)->row();
+    // send_json($srv);
+    $services = ['tot_detailers' => $srv->tot_detailers, 'status' => $srv->status];
+    send_json(['status' => 1, 'data' => $data, 'services' => $services]);
+  }
+
+  function simpanDetailersServices()
+  {
+    $id_services = $this->input->post('id_services');
+    $fserv = ['id_services' => $id_services, 'response_validate' => true];
+    $srv = $this->serv_m->getServices($fserv);
+    $id_booking = $this->input->post('id_booking');
+    $user = user();
+
+    foreach ($this->input->post('detailers') as $dtl) {
+      if ($dtl['dipilih'] == 1) {
+        $ins_detailers_services[] = [
+          'id_booking'  => $id_booking,
+          'id_services' => $id_services,
+          'id_detailer' => $dtl['id_detailer'],
+          'created_at'  => waktu(),
+          'created_by'  => $user->id_user,
+        ];
+      }
+    }
+    $this->db->trans_begin();
+    $this->db->insert_batch('booking_detailer', $ins_detailers_services);
+
+    $filter = ['id_booking' => $id_booking, 'id_services' => $id_services];
+    $upd = ['status' => 'start'];
+    $this->db->update('booking_services', $upd, $filter);
+
+    $filter = ['id_booking' => $id_booking];
+    $upd = ['status' => 'sedang_dikerjakan'];
+    $this->db->update('booking', $upd, $filter);
+
+    if ($this->db->trans_status() === FALSE) {
+      $this->db->trans_rollback();
+      $response = ['status' => 0, 'pesan' => 'Telah terjadi kesalahan !'];
+    } else {
+      $this->db->trans_commit();
+      $response = [
+        'status' => 1,
+        'url' => site_url(get_slug() . '/detail?' . set_crypt("id_0=$id_booking"))
+      ];
+      $this->session->set_flashdata(msg_sukses('Detailer Untuk Services ' . $srv->judul . ' Berhasil Disimpan'));
+    }
+    send_json($response);
+  }
+
+  function pauseServices()
+  {
+    $id_services = $this->input->post('id_services');
+    $fserv = ['id_services' => $id_services, 'response_validate' => true];
+    $srv = $this->serv_m->getServices($fserv);
+    $id_booking = $this->input->post('id_booking');
+    $user = user();
+
+    $this->db->trans_begin();
+    $filter = ['id_booking' => $id_booking, 'id_services' => $id_services];
+    $upd = ['status' => 'pause'];
+    $this->db->update('booking_services', $upd, $filter);
+    if ($this->db->trans_status() === FALSE) {
+      $this->db->trans_rollback();
+      $response = ['status' => 0, 'pesan' => 'Telah terjadi kesalahan !'];
+    } else {
+      $this->db->trans_commit();
+      $response = [
+        'status' => 1,
+        'url' => site_url(get_slug() . '/detail?' . set_crypt("id_0=$id_booking"))
+      ];
+      $this->session->set_flashdata(msg_sukses('Berhasil Melakukan Pause Untuk Services ' . $srv->judul));
+    }
+    send_json($response);
+  }
+
+  function resumeServices()
+  {
+    $id_services = $this->input->post('id_services');
+    $fserv = ['id_services' => $id_services, 'response_validate' => true];
+    $srv = $this->serv_m->getServices($fserv);
+    $id_booking = $this->input->post('id_booking');
+    $user = user();
+
+    $this->db->trans_begin();
+    $filter = ['id_booking' => $id_booking, 'id_services' => $id_services];
+    $upd = ['status' => 'start'];
+    $this->db->update('booking_services', $upd, $filter);
+    if ($this->db->trans_status() === FALSE) {
+      $this->db->trans_rollback();
+      $response = ['status' => 0, 'pesan' => 'Telah terjadi kesalahan !'];
+    } else {
+      $this->db->trans_commit();
+      $response = [
+        'status' => 1,
+        'url' => site_url(get_slug() . '/detail?' . set_crypt("id_0=$id_booking"))
+      ];
+      $this->session->set_flashdata(msg_sukses('Berhasil Melakukan Resume Untuk Services ' . $srv->judul));
+    }
+    send_json($response);
+  }
+  function endServices()
+  {
+    $id_services = $this->input->post('id_services');
+    $fserv = ['id_services' => $id_services, 'response_validate' => true];
+    $srv = $this->serv_m->getServices($fserv);
+    $id_booking = $this->input->post('id_booking');
+    $user = user();
+
+    $this->db->trans_begin();
+    $filter = ['id_booking' => $id_booking, 'id_services' => $id_services];
+    $upd = ['status' => 'end'];
+    $this->db->update('booking_services', $upd, $filter);
+    if ($this->db->trans_status() === FALSE) {
+      $this->db->trans_rollback();
+      $response = ['status' => 0, 'pesan' => 'Telah terjadi kesalahan !'];
+    } else {
+      $this->db->trans_commit();
+      $response = [
+        'status' => 1,
+        'url' => site_url(get_slug() . '/detail?' . set_crypt("id_0=$id_booking"))
+      ];
+      $this->session->set_flashdata(msg_sukses('Berhasil Menyelesaikan Services ' . $srv->judul));
+    }
+    send_json($response);
   }
 }

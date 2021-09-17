@@ -227,6 +227,10 @@ function get_slug($cek = false)
   $links[] = 'saveRoleAkses';
   $links[] = 'saveDataFileToDB';
   $links[] = 'saveBuktiPembayaranDP';
+  $links[] = 'simpanDetailersServices';
+  $links[] = 'pauseServices';
+  $links[] = 'resumeServices';
+  $links[] = 'endServices';
 
   if ($CI->uri->segment(2) != NULL) {
     $seg2 = $CI->uri->segment(2);
@@ -271,6 +275,10 @@ function get_controller()
   $links[] = 'saveBuktiPembayaranDP';
   $links[] = 'saveRoleAkses';
   $links[] = 'saveDataFileToDB';
+  $links[] = 'simpanDetailersServices';
+  $links[] = 'pauseServices';
+  $links[] = 'resumeServices';
+  $links[] = 'endServices';
 
   if ($CI->uri->segment(2) != '') {
     $seg2 = $CI->uri->segment(2);
