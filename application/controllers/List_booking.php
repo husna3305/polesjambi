@@ -123,7 +123,7 @@ class List_booking extends Crm_Controller
     $row = $this->book_m->getBooking($filter)->row();
     if ($row != NULL) {
       $data['row'] = $row;
-      $data['services'] = $this->book_m->getBookingServices($filter)->result();
+      $data['services'] = $this->book_m->getBookingDetailerServices($params['id_0']);
       $data['bayar_dp'] = $this->book_m->getBookingPembayaranDp($filter)->row();
       // send_json($data);
       $this->template_portal($data);
@@ -264,16 +264,12 @@ class List_booking extends Crm_Controller
       }
     }
     $this->db->trans_begin();
+    $upd = [
+      'id_booking' => $id_booking,
+      'id_services' => $id_services
+    ];
+    $this->db->delete('booking_detailer', $upd);
     $this->db->insert_batch('booking_detailer', $ins_detailers_services);
-
-    $filter = ['id_booking' => $id_booking, 'id_services' => $id_services];
-    $upd = ['status' => 'start'];
-    $this->db->update('booking_services', $upd, $filter);
-
-    $filter = ['id_booking' => $id_booking];
-    $upd = ['status' => 'sedang_dikerjakan'];
-    $this->db->update('booking', $upd, $filter);
-
     if ($this->db->trans_status() === FALSE) {
       $this->db->trans_rollback();
       $response = ['status' => 0, 'pesan' => 'Telah terjadi kesalahan !'];
@@ -288,6 +284,35 @@ class List_booking extends Crm_Controller
     send_json($response);
   }
 
+  function startServices()
+  {
+    $id_services = $this->input->post('id_services');
+    $fserv = ['id_services' => $id_services, 'response_validate' => true];
+    $srv = $this->serv_m->getServices($fserv);
+    $id_booking = $this->input->post('id_booking');
+    $user = user();
+
+    $this->db->trans_begin();
+    $filter = ['id_booking' => $id_booking, 'id_services' => $id_services];
+    $upd = ['status' => 'start'];
+    $this->db->update('booking_services', $upd, $filter);
+
+    $filter = ['id_booking' => $id_booking];
+    $upd = ['status' => 'sedang_dikerjakan'];
+    $this->db->update('booking', $upd, $filter);
+    if ($this->db->trans_status() === FALSE) {
+      $this->db->trans_rollback();
+      $response = ['status' => 0, 'pesan' => 'Telah terjadi kesalahan !'];
+    } else {
+      $this->db->trans_commit();
+      $response = [
+        'status' => 1,
+        'url' => site_url(get_slug() . '/detail?' . set_crypt("id_0=$id_booking"))
+      ];
+      $this->session->set_flashdata(msg_sukses('Berhasil Melakukan Start Untuk Services ' . $srv->judul));
+    }
+    send_json($response);
+  }
   function pauseServices()
   {
     $id_services = $this->input->post('id_services');

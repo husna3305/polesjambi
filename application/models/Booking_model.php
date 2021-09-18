@@ -202,6 +202,91 @@ class Booking_model extends CI_Model
     return $this->getBookingPembayaran($filter);
   }
 
+  function getBookingDetailer($filter = null)
+  {
+    $where = 'WHERE 1=1';
+    $select = "bdet.id_booking,bdet.id_services,bdet.id_detailer,nama_detailer,
+      CASE WHEN IFNULL(dtlr.gambar_small,'')='' THEN 'assets/images/avatars/avatar.png' ELSE dtlr.gambar_small END gambar_small";
+    if ($filter != null) {
+      $filter = $this->db->escape_str($filter);
+      if (isset($filter['id_booking'])) {
+        if ($filter['id_booking'] != '') {
+          $where .= " AND bdet.id_booking='{$filter['id_booking']}'";
+        }
+      }
+      if (isset($filter['id_services'])) {
+        if ($filter['id_services'] != '') {
+          $where .= " AND bdet.id_services='{$filter['id_services']}'";
+        }
+      }
+      if (isset($filter['id_detailer'])) {
+        if ($filter['id_detailer'] != '') {
+          $where .= " AND bdet.id_detailer='{$filter['id_detailer']}'";
+        }
+      }
+      if (isset($filter['search'])) {
+        if ($filter['search'] != '') {
+          $filter['search'] = $this->db->escape_str($filter['search']);
+          $where .= " AND (book.id_merk_mobil LIKE '%{$filter['search']}%'
+                           OR book.merk_mobil LIKE '%{$filter['search']}%'
+                      )
+          
+          ";
+        }
+      }
+    }
+
+    $order_data = '';
+    if (isset($filter['order'])) {
+      $order = $filter['order'];
+      $order_column = [null, 'merk_mobil', 'aktif', null];
+      if ($order != '') {
+        $order_clm  = $order_column[$order['0']['column']];
+        $order_by   = $order['0']['dir'];
+        $order_data = " ORDER BY $order_clm $order_by ";
+      }
+    }
+
+    $limit = '';
+    if (isset($filter['limit'])) {
+      $limit = $filter['limit'];
+    }
+
+    $data = $this->db->query("SELECT $select
+    FROM booking_detailer AS bdet
+    JOIN ms_detailer dtlr ON dtlr.id_detailer=bdet.id_detailer
+    $where
+    $order_data
+    $limit
+    ");
+    if (isset($filter['response_validate'])) {
+      $data = $data->row();
+      if ($data == NULL) {
+        $response = ['status' => 0, 'pesan' => 'Data booking tidak ditemukan'];
+        send_json($response);
+      } else {
+        return $data;
+      }
+    } else {
+      return $data;
+    }
+  }
+
+  function getBookingDetailerServices($id_booking)
+  {
+    $filter['id_booking']  = $id_booking;
+    $services = $this->book_m->getBookingServices($filter)->result();
+    $new_services = [];
+    foreach ($services as $srv) {
+      $flt = [
+        'id_booking' => $id_booking,
+        'id_services' => $srv->id_services
+      ];
+      $srv->detailers = $this->book_m->getBookingDetailer($flt)->result();
+      $new_services[] = $srv;
+    }
+    return $new_services;
+  }
   function getID()
   {
     $get_data  = $this->db->query("SELECT RIGHT(id_booking,3) id_booking FROM booking 
