@@ -578,7 +578,7 @@ class List_booking extends Crm_Controller
     $insert = [
       'id_booking'         => $id_booking,
       'metode_pembayaran'  => $post['metode_pembayaran'],
-      'nama_bank'          => $post['nama_bank'],
+      'nama_bank'          => $this->input->post('nama_bank') ?: '',
       'jenis_pembayaran'   => 'pelunasan',
       'waktu_pembayaran'   => $post['waktu_pembayaran'],
       'nominal_pembayaran' => $post['nominal_pembayaran'],

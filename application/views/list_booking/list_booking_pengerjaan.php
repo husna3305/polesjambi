@@ -76,7 +76,7 @@ if ($bayar_dp != null) {
             </div>
           </div>
           <div v-bind:class="setClassCardServices(index,'footer')">
-            <button type="button" class="btn btn-primary btn-sm1" @click.prevent="startServices(srv.id_services,srv.judul)" v-if="srv.tot_detailers>0 && (srv.status=='' || srv.status==null)" v-bind:id="'btnStart_'+srv.id_services">Start</button>
+            <button type="button" class="btn btn-primary btn-sm1" @click.prevent="startServices(srv.id_services,srv.judul)" v-if="srv.tot_detailers>0 && (srv.status=='new')" v-bind:id="'btnStart_'+srv.id_services">Start</button>
             <button type="button" class="btn btn-warning btn-sm1 color-white" @click.prevent="pauseServices(srv.id_services,srv.judul)" v-if="srv.tot_detailers>0 && srv.status=='start'" v-bind:id="'btnPauseServices_'+srv.id_services">Pause</button>
 
             <button type="button" class="btn btn-info btn-sm1 color-white" @click.prevent="resumeServices(srv.id_services,srv.judul)" v-if="srv.tot_detailers>0 && srv.status=='pause'" v-bind:id="'btnResumeServices_'+srv.id_services">Resume</button>

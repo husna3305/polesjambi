@@ -96,7 +96,7 @@ if ($pelunasan != null) {
                       <div class="col-md-6">
                         <label class="form-label">Bank *</label>
                         <div class="form-input">
-                          <select class="form-control" name="nama_bank" required <?= $disabled ?>>
+                          <select class="form-control" name="nama_bank" <?= $disabled ?>>
                             <option disabled selected>Pilih</option>
                             <option value="bri" <?= $pelunasan != null ? $pelunasan->nama_bank == 'bri' ? 'selected' : '' : '' ?>>BRI</option>
                             <option value="bca" <?= $pelunasan != null ? $pelunasan->nama_bank == 'bca' ? 'selected' : '' : '' ?>>BCA</option>
