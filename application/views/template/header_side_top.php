@@ -40,6 +40,11 @@
       padding: 3px 6px;
     }
 
+    .btn-xs {
+      padding: 5px 3px;
+      font-size: 8px;
+    }
+
     .center {
       text-align: center !important;
     }
@@ -80,6 +85,14 @@
     .color-red:hover {
       color: #fff;
       background-color: #ec7474;
+    }
+
+    .card-green {
+      background-color: #ddfce6;
+    }
+
+    .card-red {
+      background-color: #f105052e;
     }
   </style>
   <title><?= title() ?></title>

@@ -94,6 +94,11 @@ class Booking_model extends CI_Model
           $where .= " AND bserv.id_services='{$filter['id_services']}'";
         }
       }
+      if (isset($filter['tambahan'])) {
+        if ($filter['tambahan'] != '') {
+          $where .= " AND bserv.tambahan='{$filter['tambahan']}'";
+        }
+      }
       if (isset($filter['search'])) {
         if ($filter['search'] != '') {
           $filter['search'] = $this->db->escape_str($filter['search']);
@@ -133,7 +138,7 @@ class Booking_model extends CI_Model
     if (isset($filter['response_validate'])) {
       $data = $data->row();
       if ($data == NULL) {
-        $response = ['status' => 0, 'pesan' => 'Data booking tidak ditemukan'];
+        $response = ['status' => 0, 'pesan' => 'Data booking services tidak ditemukan'];
         send_json($response);
       } else {
         return $data;

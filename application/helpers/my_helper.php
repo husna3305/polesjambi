@@ -232,6 +232,8 @@ function get_slug($cek = false)
   $links[] = 'resumeServices';
   $links[] = 'endServices';
   $links[] = 'startServices';
+  $links[] = 'tambahServices';
+  $links[] = 'batalServices';
 
   if ($CI->uri->segment(2) != NULL) {
     $seg2 = $CI->uri->segment(2);
@@ -281,6 +283,8 @@ function get_controller()
   $links[] = 'resumeServices';
   $links[] = 'endServices';
   $links[] = 'startServices';
+  $links[] = 'tambahServices';
+  $links[] = 'batalServices';
 
   if ($CI->uri->segment(2) != '') {
     $seg2 = $CI->uri->segment(2);

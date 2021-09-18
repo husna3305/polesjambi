@@ -11,10 +11,11 @@ class Services_model extends CI_Model
     $where = 'WHERE 1=1';
     $gambar_small = "(SELECT gambar_small FROM ms_services_gambar WHERE id_services=mu.id_services AND utama=1 ORDER BY created_at DESC LIMIT 1)";
     $gambar_big = "(SELECT gambar_big FROM ms_services_gambar WHERE id_services=mu.id_services AND utama=1 ORDER BY created_at DESC LIMIT 1)";
-    $select = "*,
+    $select = "mu.*,
     CASE WHEN IFNULL($gambar_small,'')='' THEN 'assets/images/logo-icon.png' ELSE $gambar_small END gambar_small,
     CASE WHEN IFNULL($gambar_big,'')='' THEN 'assets/images/logo-icon.png' ELSE $gambar_big END gambar_big
     ";
+    $join = '';
     if (isset($filter['select'])) {
       if ($filter['select'] == 'dropdown') {
         $select = "id_services id, judul text";
@@ -41,6 +42,10 @@ class Services_model extends CI_Model
       }
       if (isset($filter['aktif'])) {
         $where .= " AND mu.aktif='{$filter['aktif']}'";
+      }
+      if (isset($filter['filter_id_booking'])) {
+        $join .= " LEFT JOIN booking_services bs ON bs.id_booking='{$filter['filter_id_booking']}' AND bs.id_services=mu.id_services";
+        $where .= " AND bs.id_services IS NULL";
       }
       if (isset($filter['search'])) {
         if ($filter['search'] != '') {
@@ -72,6 +77,7 @@ class Services_model extends CI_Model
 
     $data = $this->db->query("SELECT $select
     FROM ms_services AS mu
+    $join
     $where
     $order_data
     $limit

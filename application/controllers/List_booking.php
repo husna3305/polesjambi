@@ -9,7 +9,7 @@ class List_booking extends Crm_Controller
     parent::__construct();
     if (!logged_in()) redirect('auth/login');
     $this->load->model('booking_model', 'book_m');
-    $this->load->model('services_model', 'serv_m');
+    $this->load->model('services_model', 'srv_m');
   }
 
   public function index()
@@ -123,8 +123,11 @@ class List_booking extends Crm_Controller
     $row = $this->book_m->getBooking($filter)->row();
     if ($row != NULL) {
       $data['row'] = $row;
-      $data['services'] = $this->book_m->getBookingDetailerServices($params['id_0']);
-      $data['bayar_dp'] = $this->book_m->getBookingPembayaranDp($filter)->row();
+      $filter['tambahan'] = 0;
+      $filter['batal'] = 0;
+      $data['services_booking'] = $this->book_m->getBookingServices($filter)->result();
+      $data['services']         = $this->book_m->getBookingDetailerServices($params['id_0']);
+      $data['bayar_dp']         = $this->book_m->getBookingPembayaranDp($filter)->row();
       // send_json($data);
       $this->template_portal($data);
     } else {
@@ -247,9 +250,11 @@ class List_booking extends Crm_Controller
   function simpanDetailersServices()
   {
     $id_services = $this->input->post('id_services');
-    $fserv = ['id_services' => $id_services, 'response_validate' => true];
-    $srv = $this->serv_m->getServices($fserv);
     $id_booking = $this->input->post('id_booking');
+
+    $fserv = ['id_services' => $id_services, 'response_validate' => true, 'id_booking' => $id_booking];
+    $srv = $this->book_m->getBookingServices($fserv);
+
     $user = user();
 
     foreach ($this->input->post('detailers') as $dtl) {
@@ -257,6 +262,7 @@ class List_booking extends Crm_Controller
         $ins_detailers_services[] = [
           'id_booking'  => $id_booking,
           'id_services' => $id_services,
+          'tambahan'    => $srv->tambahan,
           'id_detailer' => $dtl['id_detailer'],
           'created_at'  => waktu(),
           'created_by'  => $user->id_user,
@@ -288,7 +294,7 @@ class List_booking extends Crm_Controller
   {
     $id_services = $this->input->post('id_services');
     $fserv = ['id_services' => $id_services, 'response_validate' => true];
-    $srv = $this->serv_m->getServices($fserv);
+    $srv = $this->srv_m->getServices($fserv);
     $id_booking = $this->input->post('id_booking');
     $user = user();
 
@@ -317,7 +323,7 @@ class List_booking extends Crm_Controller
   {
     $id_services = $this->input->post('id_services');
     $fserv = ['id_services' => $id_services, 'response_validate' => true];
-    $srv = $this->serv_m->getServices($fserv);
+    $srv = $this->srv_m->getServices($fserv);
     $id_booking = $this->input->post('id_booking');
     $user = user();
 
@@ -343,7 +349,7 @@ class List_booking extends Crm_Controller
   {
     $id_services = $this->input->post('id_services');
     $fserv = ['id_services' => $id_services, 'response_validate' => true];
-    $srv = $this->serv_m->getServices($fserv);
+    $srv = $this->srv_m->getServices($fserv);
     $id_booking = $this->input->post('id_booking');
     $user = user();
 
@@ -368,7 +374,7 @@ class List_booking extends Crm_Controller
   {
     $id_services = $this->input->post('id_services');
     $fserv = ['id_services' => $id_services, 'response_validate' => true];
-    $srv = $this->serv_m->getServices($fserv);
+    $srv = $this->srv_m->getServices($fserv);
     $id_booking = $this->input->post('id_booking');
     $user = user();
 
@@ -386,6 +392,132 @@ class List_booking extends Crm_Controller
         'url' => site_url(get_slug() . '/detail?' . set_crypt("id_0=$id_booking"))
       ];
       $this->session->set_flashdata(msg_sukses('Berhasil Menyelesaikan Services ' . $srv->judul));
+    }
+    send_json($response);
+  }
+
+  public function fetchDataServices()
+  {
+    $fetch_data = $this->_makeQueryServices();
+    $data = array();
+    $no = $this->input->post('start') + 1;
+    foreach ($fetch_data as  $rs) {
+      $html = '<div class="d-flex align-items-center">
+      <div class="font-4">
+      <!--<img src="' . base_url($rs->gambar_small) . '" class="user-img" alt="user avatar">--!>
+      </div>
+      <div class="flex-grow-1 ms-2">
+      <p style="font-weight:500" class="mb-0">' . $rs->judul . '</p>
+      </div>
+      </div>
+      ';
+
+      $json_rs = [
+        'id_services' => $rs->id_services,
+        'judul' => $rs->judul,
+        'detailers' => []
+      ];
+      $button = '
+      <script>var serv_' . $rs->id_services . '=' . json_encode($json_rs) . '</script>
+      <button class="btn btn-primary btn-xs btnPilihListServices" onclick="pilihServices(serv_' . $rs->id_services . ')">&nbsp;&nbsp;<i class="fa fa-plus"></i></button>';
+      $sub_array   = array();
+      $sub_array[] = $html;
+      $sub_array[] = $rs->kategori;
+      $sub_array[] = mata_uang_rp($rs->estimasi_biaya);
+      $sub_array[] = $rs->estimasi_waktu_jam . ':' . $rs->estimasi_waktu_menit;
+      $sub_array[] = $button;
+      $data[]      = $sub_array;
+      $no++;
+    }
+    $output = array(
+      "draw"            => intval($_POST["draw"]),
+      "recordsFiltered" => $this->_makeQueryServices(true),
+      "data"            => $data
+    );
+    echo json_encode($output);
+  }
+
+  function _makeQueryServices($recordsFiltered = false)
+  {
+    $start  = $this->input->post('start');
+    $length = $this->input->post('length');
+    $limit  = "LIMIT $start, $length";
+    if ($recordsFiltered == true) $limit = '';
+
+    $filter = [
+      'limit'  => $limit,
+      'order'  => isset($_POST['order']) ? $_POST['order'] : '',
+      'search' => $this->input->post('search')['value'],
+      'order_column' => 'view',
+      'filter_id_booking' => $this->input->post('id_booking'),
+      'aktif' => 1
+    ];
+    if ($recordsFiltered == true) {
+      return $this->srv_m->getServices($filter)->num_rows();
+      return 1;
+    } else {
+      return $this->srv_m->getServices($filter)->result();
+    }
+  }
+
+  function tambahServices()
+  {
+    $id_services = $this->input->post('id_services');
+    $fserv = ['id_services' => $id_services, 'response_validate' => true];
+    $srv = $this->srv_m->getServices($fserv);
+    $id_booking = $this->input->post('id_booking');
+    $user = user();
+
+    $this->db->trans_begin();
+    $insert = [
+      'id_booking'  => $id_booking,
+      'id_services' => $id_services,
+      'biaya'       => $srv->estimasi_biaya,
+      'waktu_menit' => time_to_minutes($srv->estimasi_waktu_jam, $srv->estimasi_waktu_menit),
+      'created_at'  => waktu(),
+      'created_by'  => $user->id_user,
+      'tambahan'    => 1
+    ];
+    // send_json($insert);
+    $this->db->insert('booking_services', $insert);
+    if ($this->db->trans_status() === FALSE) {
+      $this->db->trans_rollback();
+      $response = ['status' => 0, 'pesan' => 'Telah terjadi kesalahan !'];
+    } else {
+      $this->db->trans_commit();
+      $response = [
+        'status' => 1,
+        'url' => site_url(get_slug() . '/detail?' . set_crypt("id_0=$id_booking"))
+      ];
+      $this->session->set_flashdata(msg_sukses('Berhasil Menambahkan Services ' . $srv->judul));
+    }
+    send_json($response);
+  }
+
+  function batalServices()
+  {
+    $id_services = $this->input->post('id_services');
+    $fserv = ['id_services' => $id_services, 'response_validate' => true];
+    $srv = $this->srv_m->getServices($fserv);
+    $id_booking = $this->input->post('id_booking');
+    $user = user();
+
+    $this->db->trans_begin();
+    $filter = ['id_booking' => $id_booking, 'id_services' => $id_services];
+    $upd = ['status' => 'batal', 'batal' => 1];
+    $this->db->update('booking_services', $upd, $filter);
+    $upd = ['batal' => 1];
+    $this->db->update('booking_detailer', $upd, $filter);
+    if ($this->db->trans_status() === FALSE) {
+      $this->db->trans_rollback();
+      $response = ['status' => 0, 'pesan' => 'Telah terjadi kesalahan !'];
+    } else {
+      $this->db->trans_commit();
+      $response = [
+        'status' => 1,
+        'url' => site_url(get_slug() . '/detail?' . set_crypt("id_0=$id_booking"))
+      ];
+      $this->session->set_flashdata(msg_sukses('Berhasil Membatalkan Services ' . $srv->judul));
     }
     send_json($response);
   }

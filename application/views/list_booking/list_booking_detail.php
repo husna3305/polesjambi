@@ -84,7 +84,7 @@ if ($mode == 'detail') {
                       <div class="collapse show" id="t2_details">
                         <ul class="list-group list-group-flush radius-10">
                           <?php $total = 0;
-                          foreach ($services as $key => $srv) {
+                          foreach ($services_booking as $key => $srv) {
                             $total += $srv->biaya; ?>
                             <li class="list-group-item d-flex align-items-center radius-10 mb-2 shadow-sm">
                               <div class="d-flex align-items-center">
