@@ -29,10 +29,10 @@ if ($bayar_dp != null) {
           <div class="col-sm-4" align='right'>
             <?php if ($row->status == 'menunggu_pembayaran') {
               $text_btn = "<i class='fa fa-upload'></i> Upload Bukti Pembayaran"; ?>
-              <button type="button" class="btn btn-primary px-2 radius-30 btn-sm">Menunggu Pembayaran</button>
+              <button type="button" class="btn btn-primary px-2 radius-30 btn-xs">Menunggu Pembayaran</button>
             <?php } else {
               $text_btn = "Bukti Pembayaran"; ?>
-              <button type="button" class="btn btn-success px-2 radius-30 btn-sm">Lunas</button>
+              <button type="button" class="btn btn-success px-2 radius-30 btn-xs">Lunas</button>
             <?php } ?>
           </div>
         </div>

@@ -41,8 +41,8 @@
     }
 
     .btn-xs {
-      padding: 5px 3px;
-      font-size: 8px;
+      padding: 0px 0px;
+      font-size: 0.78rem;
     }
 
     .center {

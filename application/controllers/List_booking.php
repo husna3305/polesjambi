@@ -419,7 +419,7 @@ class List_booking extends Crm_Controller
       ];
       $button = '
       <script>var serv_' . $rs->id_services . '=' . json_encode($json_rs) . '</script>
-      <button class="btn btn-primary btn-xs btnPilihListServices" onclick="pilihServices(serv_' . $rs->id_services . ')">&nbsp;&nbsp;<i class="fa fa-plus"></i></button>';
+      <button class="btn btn-primary btn-sm btnPilihListServices" onclick="pilihServices(serv_' . $rs->id_services . ')">&nbsp;<i class="fa fa-plus" style="font-size:12pt"></i></button>';
       $sub_array   = array();
       $sub_array[] = $html;
       $sub_array[] = $rs->kategori;

@@ -42,11 +42,10 @@ if ($bayar_dp != null) {
                 <h6>{{srv.judul}}</h6>
               </div>
               <div class="col-sm-6 right">
-                <button type="button" class="btn btn-secondary px-2 radius-30 btn-sm" v-if="srv.status=='' || srv.status==null">Belum Dikerjakan</button>
-                <button type="button" class="btn btn-info px-2 radius-30 btn-sm" v-if="srv.status=='start'">Sedang Dikerjakan</button>
-                <button type="button" class="btn btn-warning px-2 radius-30 btn-sm color-white" v-if="srv.status=='pause'">Pause</button>
-                <button type="button" class="btn btn-success px-2 radius-30 btn-sm" v-if="srv.status=='end'">Selesai</button>
-                <button @click.prevent="batalServices(srv.id_services,srv.judul)" type="button" class="btn btn-danger px-2 btn-sm" v-if="srv.status!='end' && srv.batal==0" v-bind:id="'btnBatalServices_'+srv.id_services">Batal</button>
+                <button type="button" class="btn btn-secondary px-2 radius-30 btn-xs" v-if="srv.status=='' || srv.status==null">Belum Dikerjakan</button>
+                <button type="button" class="btn btn-info px-2 radius-30 btn-xs" v-if="srv.status=='start'">Sedang Dikerjakan</button>
+                <button type="button" class="btn btn-warning px-2 radius-30 btn-xs color-white" v-if="srv.status=='pause'">Pause</button>
+                <button type="button" class="btn btn-success px-2 radius-30 btn-xs" v-if="srv.status=='end'">Selesai</button>
               </div>
             </div>
           </div>
@@ -83,6 +82,9 @@ if ($bayar_dp != null) {
             <button type="button" class="btn btn-info btn-sm1 color-white" @click.prevent="resumeServices(srv.id_services,srv.judul)" v-if="srv.tot_detailers>0 && srv.status=='pause'" v-bind:id="'btnResumeServices_'+srv.id_services">Resume</button>
 
             <button type="button" class="btn btn-success btn-sm1 color-white" @click.prevent="endServices(srv.id_services,srv.judul)" v-if="srv.tot_detailers>0 && (srv.status=='pause' || srv.status=='start')" v-bind:id="'btnEndServices_'+srv.id_services">End</button>
+
+            <button @click.prevent="batalServices(srv.id_services,srv.judul)" type="button" class="btn btn-danger px-2" v-if="srv.status!='end' && srv.batal==0" v-bind:id="'btnBatalServices_'+srv.id_services">Batal</button>
+
           </div>
         </div>
         <hr>
