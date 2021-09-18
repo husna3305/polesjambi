@@ -44,6 +44,7 @@ if ($bayar_dp != null) {
               <div class="col-sm-6 right">
                 <button type="button" class="btn btn-secondary px-2 radius-30 btn-sm" v-if="srv.status=='' || srv.status==null">Belum Dikerjakan</button>
                 <button type="button" class="btn btn-info px-2 radius-30 btn-sm" v-if="srv.status=='start'">Sedang Dikerjakan</button>
+                <button type="button" class="btn btn-warning px-2 radius-30 btn-sm" v-if="srv.status=='pause'">Pause</button>
                 <button type="button" class="btn btn-success px-2 radius-30 btn-sm" v-if="srv.status=='end'">Selesai</button>
                 <!-- <button type="button" class="btn btn-danger px-2 btn-sm" v-if="srv.status!='end'">Batal</button> -->
               </div>
