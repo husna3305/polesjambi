@@ -9,8 +9,14 @@ class Booking_model extends CI_Model
   function getBooking($filter = null)
   {
     $where = 'WHERE 1=1';
-    $tot_servis = "SELECT COUNT(id_booking) FROm booking_services WHERE id_booking=book.id_booking";
-    $select = "book.*,merk.merk_mobil,jenis.jenis_mobil,provinsi,kabupaten,kecamatan,kelurahan,($tot_servis) tot_servis,(book.total_dp+book.nominal_unik) grand_tot_dp";
+    $tot_servis = "SELECT COUNT(id_booking) FROm booking_services WHERE id_booking=book.id_booking AND batal=0";
+    $tot_biaya_servis = "SELECT SUM(biaya) FROm booking_services WHERE id_booking=book.id_booking AND batal=0";
+
+    $belum_selesai = "SELECT COUNT(id_booking) FROM booking_services WHERE id_booking=book.id_booking AND booking_services.batal=0 AND booking_services.status!='end'";
+    $grand_total_dp = "book.total_dp+book.nominal_unik";
+    $select = "book.*,merk.merk_mobil,jenis.jenis_mobil,provinsi,kabupaten,kecamatan,kelurahan,($grand_total_dp) grand_tot_dp,($tot_servis) tot_servis,
+    CASE WHEN ($belum_selesai) > 0 THEN 1 ELSE 0 END belum_selesai,
+    (($tot_biaya_servis)-($grand_total_dp)) grand_total";
     if (isset($filter['select'])) {
       if ($filter['select'] == 'dropdown') {
         $select = "id_merk_mobil id, merk_mobil text";
@@ -97,6 +103,11 @@ class Booking_model extends CI_Model
       if (isset($filter['tambahan'])) {
         if ($filter['tambahan'] != '') {
           $where .= " AND bserv.tambahan='{$filter['tambahan']}'";
+        }
+      }
+      if (isset($filter['batal'])) {
+        if ($filter['batal'] != '') {
+          $where .= " AND bserv.batal='{$filter['batal']}'";
         }
       }
       if (isset($filter['search'])) {
@@ -204,6 +215,12 @@ class Booking_model extends CI_Model
   function getBookingPembayaranDp($filter)
   {
     $filter['jenis_pembayaran'] = 'dp';
+    return $this->getBookingPembayaran($filter);
+  }
+
+  function getBookingPelunasan($filter)
+  {
+    $filter['jenis_pembayaran'] = 'pelunasan';
     return $this->getBookingPembayaran($filter);
   }
 

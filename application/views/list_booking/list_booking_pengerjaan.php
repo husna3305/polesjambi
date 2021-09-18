@@ -12,7 +12,7 @@ if ($bayar_dp != null) {
     <h5 class="m-2">
       <span class="badge rounded-pill <?= ($row->status == 'sedang_dikerjakan' || $row->status == 'menunggu_kedatangan') == true ? 'bg-primary' : 'bg-light border' ?>">&nbsp;</span>
     </h5>
-    <?php if ($row->status == 'selesai') { ?>
+    <?php if ($row->status == 'selesai' || $row->status == 'menunggu_pelunasan') { ?>
       <div class="row h-50">
         <div class="col border-end">&nbsp;</div>
         <div class="col">&nbsp;</div>
@@ -42,7 +42,7 @@ if ($bayar_dp != null) {
                 <h6>{{srv.judul}}</h6>
               </div>
               <div class="col-sm-6 right">
-                <button type="button" class="btn btn-secondary px-2 radius-30 btn-xs" v-if="srv.status=='' || srv.status==null">Belum Dikerjakan</button>
+                <button type="button" class="btn btn-secondary px-2 radius-30 btn-xs" v-if="srv.status=='new'">Belum Dikerjakan</button>
                 <button type="button" class="btn btn-info px-2 radius-30 btn-xs" v-if="srv.status=='start'">Sedang Dikerjakan</button>
                 <button type="button" class="btn btn-warning px-2 radius-30 btn-xs color-white" v-if="srv.status=='pause'">Pause</button>
                 <button type="button" class="btn btn-success px-2 radius-30 btn-xs" v-if="srv.status=='end'">Selesai</button>
@@ -87,24 +87,33 @@ if ($bayar_dp != null) {
 
           </div>
         </div>
-        <hr>
-        <div class="card">
-          <div class="card-header" style="padding-bottom:0px !important">
-            <h6>Tambah Services Baru</h6>
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-sm-12 col-md-12">
-                <div class="input-group">
-                  <input type="text" class="form-control" placeholder="Pilih Services" disabled>
-                  <label class="input-group-text btn-info text-white" @click.prevent="tambahServicesBaru()"><i class='fa fa-search'></i></label>
+        <?php if ($row->status != 'selesai') { ?>
+          <hr>
+          <div class="card">
+            <div class="card-header" style="padding-bottom:0px !important">
+              <h6>Tambah Services Baru</h6>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-12 col-md-12">
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Pilih Services" disabled>
+                    <label class="input-group-text btn-info text-white" @click.prevent="tambahServicesBaru()"><i class='fa fa-search'></i></label>
+                  </div>
                 </div>
               </div>
             </div>
+            <div class="card-footer center">
+            </div>
           </div>
-          <div class="card-footer center">
+        <?php } ?>
+        <?php if ($row->belum_selesai == 0 && ($row->status == 'selesai' || $row->status == 'menunggu_pelunasan') == false) { ?>
+          <div class="card">
+            <div class="card-header center">
+              <button @click.prevent="selesaikanServices()" type="button" class="btn btn-success px-2" id="btnSelesaikanServices">Selesai</button>
+            </div>
           </div>
-        </div>
+        <?php } ?>
       </div>
     </div>
   </div>
@@ -347,7 +356,43 @@ $this->load->view('list_booking/list_booking_pengerjaan_modal', $data);
           }
         })
 
+      },
+      selesaikanServices: function() {
+        Swal.fire({
+          text: 'Apakah Anda Ingin Menyelesaikan Services dan Melanjutkan Ke Tahap Pelunasan Pembayaran ?',
+          showCancelButton: true,
+          confirmButtonText: 'Lanjutkan',
+          cancelButtonText: 'Batal',
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed) {
+            values = {
+              id_booking: '<?= $row->id_booking ?>',
+            }
+            $.ajax({
+              beforeSend: function() {
+                $('#btnSelesaikanServices').html('<i class="fa fa-spinner fa-spin"></i>');
+                $('#btnSelesaikanServices').attr('disabled', true);
+              },
+              type: 'POST',
+              url: '<?= site_url(get_controller() . '/selesaikanServices') ?>',
+              data: values,
+              dataType: 'json',
+              success: function(response) {
+                if (response.status == 1) {
+                  window.location = response.url;
+                } else {
+                  $('#btnSelesaikanServices').attr('disabled', false);
+                }
+                $('#btnSelesaikanServices').html('Selesai');
+              }
+            });
+          } else if (result.isDenied) {
+            // Swal.fire('Changes are not saved', '', 'info')
+          }
+        })
+
       }
-    },
+    }
   })
 </script>

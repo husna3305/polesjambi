@@ -56,8 +56,8 @@ class List_booking extends Crm_Controller
       if (($rs->status == 'sedang_dikerjakan')) {
         $button .= '<button type="button" class="btn btn-outline-info btn-sm left"><i class="fa fa-check"></i> Sedang Dikerjakan</i></button>';
       }
-      if (($rs->status == 'selesai_dikerjakan')) {
-        $button .= '<button type="button" class="btn btn-outline-info btn-sm left"><i class="fa fa-check"></i> Selesai Dikerjakan</i></button>';
+      if (($rs->status == 'menunggu_pelunasan')) {
+        $button = '<button type="button" class="btn btn-outline-info btn-sm left"><i class="fa fa-check"></i> Menunggu Pelunasan</i></button>';
       }
       if (($rs->status == 'selesai')) {
         $button = '<button type="button" class="btn btn-outline-success btn-sm left"><i class="fa fa-check"></i> Selesai</i></button>';
@@ -128,7 +128,13 @@ class List_booking extends Crm_Controller
       $data['services_booking'] = $this->book_m->getBookingServices($filter)->result();
       $data['services']         = $this->book_m->getBookingDetailerServices($params['id_0']);
       $data['bayar_dp']         = $this->book_m->getBookingPembayaranDp($filter)->row();
-      // send_json($data);
+
+      $filter = [
+        'id_booking' => $params['id_0'],
+        'batal' => 0
+      ];
+      $data['services_pelunasan'] = $this->book_m->getBookingServices($filter)->result();
+      $data['pelunasan']          = $this->book_m->getBookingPelunasan($filter)->row();
       $this->template_portal($data);
     } else {
       $this->session->set_flashdata(msg_not_found());
@@ -300,7 +306,7 @@ class List_booking extends Crm_Controller
 
     $this->db->trans_begin();
     $filter = ['id_booking' => $id_booking, 'id_services' => $id_services];
-    $upd = ['status' => 'start'];
+    $upd = ['status' => 'start', 'start_at' => waktu()];
     $this->db->update('booking_services', $upd, $filter);
 
     $filter = ['id_booking' => $id_booking];
@@ -380,7 +386,7 @@ class List_booking extends Crm_Controller
 
     $this->db->trans_begin();
     $filter = ['id_booking' => $id_booking, 'id_services' => $id_services];
-    $upd = ['status' => 'end'];
+    $upd = ['status' => 'end', 'end_at' => waktu()];
     $this->db->update('booking_services', $upd, $filter);
     if ($this->db->trans_status() === FALSE) {
       $this->db->trans_rollback();
@@ -476,9 +482,9 @@ class List_booking extends Crm_Controller
       'waktu_menit' => time_to_minutes($srv->estimasi_waktu_jam, $srv->estimasi_waktu_menit),
       'created_at'  => waktu(),
       'created_by'  => $user->id_user,
-      'tambahan'    => 1
+      'tambahan'    => 1,
+      'status'      => 'new'
     ];
-    // send_json($insert);
     $this->db->insert('booking_services', $insert);
     if ($this->db->trans_status() === FALSE) {
       $this->db->trans_rollback();
@@ -506,8 +512,10 @@ class List_booking extends Crm_Controller
     $filter = ['id_booking' => $id_booking, 'id_services' => $id_services];
     $upd = ['status' => 'batal', 'batal' => 1];
     $this->db->update('booking_services', $upd, $filter);
+
     $upd = ['batal' => 1];
     $this->db->update('booking_detailer', $upd, $filter);
+
     if ($this->db->trans_status() === FALSE) {
       $this->db->trans_rollback();
       $response = ['status' => 0, 'pesan' => 'Telah terjadi kesalahan !'];
@@ -518,6 +526,91 @@ class List_booking extends Crm_Controller
         'url' => site_url(get_slug() . '/detail?' . set_crypt("id_0=$id_booking"))
       ];
       $this->session->set_flashdata(msg_sukses('Berhasil Membatalkan Services ' . $srv->judul));
+    }
+    send_json($response);
+  }
+  function selesaikanServices()
+  {
+    $id_booking = $this->input->post('id_booking');
+    $fserv = ['id_booking' => $id_booking, 'response_validate' => true];
+    $this->book_m->getBooking($fserv);
+
+    $user = user();
+
+    $this->db->trans_begin();
+    $filter = ['id_booking' => $id_booking];
+    $upd = [
+      'status'     => 'menunggu_pelunasan',
+      'selesai_at' => waktu(),
+      'selesai_by' => $user->id_user
+    ];
+    $this->db->update('booking', $upd, $filter);
+    if ($this->db->trans_status() === FALSE) {
+      $this->db->trans_rollback();
+      $response = ['status' => 0, 'pesan' => 'Telah terjadi kesalahan !'];
+    } else {
+      $this->db->trans_commit();
+      $response = [
+        'status' => 1,
+        'url' => site_url(get_slug() . '/detail?' . set_crypt("id_0=$id_booking"))
+      ];
+      $this->session->set_flashdata(msg_sukses('Berhasil Menyelesaikan Keseluruhan Services'));
+    }
+    send_json($response);
+  }
+
+  public function simpanPelunasan()
+  {
+    $user = user();
+    $post = $this->input->post();
+    $id_booking       = $this->input->post('id_booking');
+
+    //Cek Data Booking
+    $filter = [
+      'id_booking' => $id_booking,
+      'response_validate' => true
+    ];
+    $book = $this->book_m->getBooking($filter);
+
+
+    // $bukti_pembayaran = $this->_upload_bukti_pembayaran("$id_booking-dp");
+
+    $insert = [
+      'id_booking'         => $id_booking,
+      'metode_pembayaran'  => $post['metode_pembayaran'],
+      'nama_bank'          => $post['nama_bank'],
+      'jenis_pembayaran'   => 'pelunasan',
+      'waktu_pembayaran'   => $post['waktu_pembayaran'],
+      'nominal_pembayaran' => $post['nominal_pembayaran'],
+      'bukti_pembayaran'   => null,
+      'created_at'         => waktu(),
+      'created_by'         => $user->id_user,
+    ];
+    $upd_header = [
+      'status'     => 'selesai',
+    ];
+
+    $tes = [
+      'insert' => $insert,
+      'upd_header' => $upd_header,
+    ];
+    // send_json($tes);
+    $this->db->trans_begin();
+    $this->db->insert('booking_pembayaran', $insert);
+
+    $filter = ['id_booking' => $id_booking];
+    $this->db->update('booking', $upd_header, $filter);
+
+    if ($this->db->trans_status() === FALSE) {
+      $this->db->trans_rollback();
+      $response = ['status' => 0, 'pesan' => 'Telah terjadi kesalahan !'];
+    } else {
+      $this->db->trans_commit();
+      $response = [
+        'status' => 1,
+        'url' => site_url(get_slug())
+      ];
+      $this->session->set_flashdata(msg_sukses('Pelunasan Untuk ID Booking : ' . $id_booking . ' Berhasil Disimpan. Transaksi Selesai'));
     }
     send_json($response);
   }

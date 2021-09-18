@@ -67,12 +67,13 @@ class Front extends Crm_Controller
           send_json($response);
         } else {
           $ins_services[] = [
-            'id_booking' => $id_booking,
+            'id_booking'  => $id_booking,
             'id_services' => $svc,
-            'biaya' => $dt_svc->estimasi_biaya,
+            'biaya'       => $dt_svc->estimasi_biaya,
             'waktu_menit' => time_to_minutes($dt_svc->estimasi_waktu_jam, $dt_svc->estimasi_waktu_menit),
-            'created_at'      => waktu(),
-            'created_by'      => 0,
+            'created_at'  => waktu(),
+            'created_by'  => 0,
+            'status'      => 'new'
           ];
           $tot_biaya += $dt_svc->estimasi_biaya;
         }

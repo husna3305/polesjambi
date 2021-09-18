@@ -117,10 +117,17 @@ if ($mode == 'detail') {
           <?php
           $data = ['row' => $row, 'bayar_dp' => $bayar_dp];
           $this->load->view('list_booking/list_booking_pembayaran_dp', $data); ?>
+
           <?php
           $data = ['row' => $row];
-          if ($row->status == 'dp_lunas' || $row->status == 'menunggu_kedatangan' || $row->status == 'sedang_dikerjakan') {
+          if ($row->status == 'dp_lunas' || $row->status == 'menunggu_kedatangan' || $row->status == 'sedang_dikerjakan' || $row->status == 'selesai' || $row->status == 'menunggu_pelunasan') {
             $this->load->view('list_booking/list_booking_pengerjaan', $data);
+          } ?>
+
+          <?php
+          $data = ['row' => $row, 'pelunasan' => $pelunasan, 'services_pelunasan' => $services_pelunasan];
+          if ($row->status == 'selesai' || $row->status == 'menunggu_pelunasan') {
+            $this->load->view('list_booking/list_booking_pelunasan', $data);
           } ?>
           <!--/row-->
         </div>
