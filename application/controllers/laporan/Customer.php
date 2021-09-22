@@ -96,119 +96,32 @@ class Customer extends Crm_Controller
       return $sample;
     }
   }
-
-  public function insert()
+  function tes()
   {
-    $data['title'] = $this->title;
-    $data['file']  = 'customer_form';
-    $data['mode']  = 'insert';
-    $this->template_portal($data);
-  }
+    // $this->load->library('pdfgenerator');
+    // $file_pdf = strtotime(waktu());
+    // $paper = 'A4';
+    // $orientation = "portrait";
+    // $html = "<p>Tes</p>";
+    // $this->pdfgenerator->generate($html, $file_pdf, $paper, $orientation);
 
-  public function saveData()
-  {
-    $user = user();
-    $this->load->library('upload');
-    $post     = $this->input->post();
+    // panggil library yang kita buat sebelumnya yang bernama pdfgenerator
+    $this->load->library('pdfgenerator');
 
-    $insert = [
-      'merk_mobil' => $post['merk_mobil'],
-      'aktif'      => isset($_POST['aktif']) ? 1 : 0,
-      'created_at' => waktu(),
-      'created_by' => $user->id_user,
-    ];
+    // title dari pdf
+    $this->data['title_pdf'] = 'Laporan Penjualan Toko Kita';
 
-    $tes = ['insert' => $insert];
-    // send_json($tes);
-    $this->db->trans_begin();
-    $this->db->insert('ms_merk_mobil', $insert);
-    if ($this->db->trans_status() === FALSE) {
-      $this->db->trans_rollback();
-      $response = ['status' => 0, 'pesan' => 'Telah terjadi kesalahan !'];
-    } else {
-      $this->db->trans_commit();
-      $response = [
-        'status' => 1,
-        'url' => site_url(get_slug())
-      ];
-      $this->session->set_flashdata(msg_sukses_simpan());
-    }
-    send_json($response);
-  }
+    // filename dari pdf ketika didownload
+    $file_pdf = 'laporan_penjualan_toko_kita';
+    // setting paper
+    $paper = 'A4';
+    //orientasi paper potrait / landscape
+    $orientation = "portrait";
 
-  public function edit()
-  {
-    $data['title'] = 'Edit ' . $this->title;
-    $data['file']  = 'customer_form';
-    $data['mode']  = 'edit';
-    $params = get_params($this->input->get(), true);
-    $filter['id_merk_mobil']  = $params['id'];
-    $row = $this->mbl_m->getMerkMobil($filter)->row();
-    if ($row != NULL) {
-      $data['row'] = $row;
-      $this->template_portal($data);
-    } else {
-      $this->session->set_flashdata(msg_not_found());
-      redirect(get_slug());
-    }
-  }
+    // $html = $this->load->view('laporan_pdf', $this->data, true);
+    $html = "<p>Tes</p>";
 
-  public function saveEdit()
-  {
-    $user = user();
-    $this->load->library('upload');
-    $post     = $this->input->post();
-    $filter = ['id_merk_mobil' => $this->input->post('id_merk_mobil')];
-    $row = $this->mbl_m->getMerkMobil($filter)->row();
-    if ($row == NULL) {
-      $result = [
-        'status' => 0,
-        'pesan' => 'Data tidak ditemukan'
-      ];
-      send_json($result);
-    }
-    $update = [
-      'merk_mobil' => $post['merk_mobil'],
-      'aktif'        => isset($_POST['aktif']) ? 1 : 0,
-      'updated_at'   => waktu(),
-      'updated_by'   => $user->id_user,
-    ];
-
-    $tes = ['update' => $update];
-    // send_json($tes);
-    $this->db->trans_begin();
-    $this->db->update('ms_merk_mobil', $update, $filter);
-    if ($this->db->trans_status() === FALSE) {
-      $this->db->trans_rollback();
-      $response = ['status' => 0, 'pesan' => 'Telah terjadi kesalahan !'];
-    } else {
-      $this->db->trans_commit();
-      $response = [
-        'status' => 1,
-        'url' => site_url(get_slug())
-      ];
-      $this->session->set_flashdata(msg_sukses_update());
-    }
-    send_json($response);
-  }
-
-  public function detail()
-  {
-    $data['title'] = 'Detail ' . $this->title;
-    $data['file']  = 'list_booking/customer_detail';
-    $data['mode']  = 'detail';
-    $data['id'] = $this->input->get('id');
-    $this->template_portal($data);
-
-    // $params = get_params($this->input->get(), true);
-    // $filter['id_merk_mobil']  = $params['id'];
-    // $row = $this->mbl_m->getMerkMobil($filter)->row();
-    // if ($row != NULL) {
-    //   $data['row'] = $row;
-    //   $this->template_portal($data);
-    // } else {
-    //   $this->session->set_flashdata(msg_not_found());
-    //   redirect(get_slug());
-    // }
+    // run dompdf
+    $this->pdfgenerator->generate($html, $file_pdf, $paper, $orientation);
   }
 }
