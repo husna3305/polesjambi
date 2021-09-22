@@ -51,6 +51,22 @@ if ($bayar_dp != null) {
           </div>
           <div class="card-body">
             <div class="row">
+              <div class="col-sm-12 col-md-12">
+                <div class="card">
+                  <div class="card-body">
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td>Waktu Mulai</td>
+                          <td> : {{srv.start_at}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
               <div class="col-md-4" v-for="(dtlr, index) of srv.detailers">
                 <div class="parent-product-img border py-1 radius-10 cursor-pointer mb-1">
                   <div class="d-flex align-items-center" style="padding-left:5px">

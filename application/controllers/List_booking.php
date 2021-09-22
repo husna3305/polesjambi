@@ -10,6 +10,7 @@ class List_booking extends Crm_Controller
     if (!logged_in()) redirect('auth/login');
     $this->load->model('booking_model', 'book_m');
     $this->load->model('services_model', 'srv_m');
+    $this->load->model('biaya_tambahan_model', 'biaya_tambah_m');
   }
 
   public function index()
@@ -135,6 +136,10 @@ class List_booking extends Crm_Controller
       ];
       $data['services_pelunasan'] = $this->book_m->getBookingServices($filter)->result();
       $data['pelunasan']          = $this->book_m->getBookingPelunasan($filter)->row();
+      $data['biaya_tambahan']     = $this->book_m->getBookingBiayaTambahan($filter)->result();
+
+      $ftbh = ['aktif' => 1, 'select' => 'dropdown'];
+      $data['option_biaya_tambahan'] = $this->biaya_tambah_m->getBiayaTambahan($ftbh)->result();
       $this->template_portal($data);
     } else {
       $this->session->set_flashdata(msg_not_found());
@@ -611,6 +616,36 @@ class List_booking extends Crm_Controller
         'url' => site_url(get_slug())
       ];
       $this->session->set_flashdata(msg_sukses('Pelunasan Untuk ID Booking : ' . $id_booking . ' Berhasil Disimpan. Transaksi Selesai'));
+    }
+    send_json($response);
+  }
+
+  function simpanBiayaTambahan()
+  {
+    $id_booking = $this->input->post('id_booking');
+
+    $user = user();
+    foreach ($this->input->post('biaya_tambahan') as $dtl) {
+      $ins_tambahan[] = [
+        'id_booking'         => $id_booking,
+        'id_tambahan'        => $dtl['id_tambahan'],
+        'keterangan_lainnya' => $dtl['keterangan_lainnya'],
+        'nominal'            => $dtl['nominal'],
+        'created_at'         => waktu(),
+        'created_by'         => $user->id_user,
+      ];
+    }
+    $this->db->trans_begin();
+    $upd = ['id_booking' => $id_booking];
+    $this->db->delete('booking_biaya_tambahan', $upd);
+    $this->db->insert_batch('booking_biaya_tambahan', $ins_tambahan);
+    if ($this->db->trans_status() === FALSE) {
+      $this->db->trans_rollback();
+      $response = ['status' => 0, 'pesan' => 'Telah terjadi kesalahan !'];
+    } else {
+      $this->db->trans_commit();
+      $data = $this->book_m->getBookingBiayaTambahan($upd)->result();
+      $response = ['status' => 1, 'data' => $data];
     }
     send_json($response);
   }

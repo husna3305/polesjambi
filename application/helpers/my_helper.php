@@ -236,6 +236,7 @@ function get_slug($cek = false)
   $links[] = 'batalServices';
   $links[] = 'selesaikanServices';
   $links[] = 'simpanPelunasan';
+  $links[] = 'simpanBiayaTambahan';
 
   if ($CI->uri->segment(2) != NULL) {
     $seg2 = $CI->uri->segment(2);
@@ -289,6 +290,7 @@ function get_controller()
   $links[] = 'batalServices';
   $links[] = 'selesaikanServices';
   $links[] = 'simpanPelunasan';
+  $links[] = 'simpanBiayaTambahan';
 
   if ($CI->uri->segment(2) != '') {
     $seg2 = $CI->uri->segment(2);

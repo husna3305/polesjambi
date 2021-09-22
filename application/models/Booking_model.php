@@ -51,6 +51,8 @@ class Booking_model extends CI_Model
         $order_clm  = $order_column[$order['0']['column']];
         $order_by   = $order['0']['dir'];
         $order_data = " ORDER BY $order_clm $order_by ";
+      } else {
+        $order_data = " ORDER BY tanggal_booking DESC";
       }
     }
 
@@ -308,6 +310,38 @@ class Booking_model extends CI_Model
       $new_services[] = $srv;
     }
     return $new_services;
+  }
+
+  function getBookingBiayaTambahan($filter = null)
+  {
+    $where = 'WHERE 1=1';
+    $select = "bdet.id_booking,bdet.id_tambahan,bdet.keterangan_lainnya,nominal,bth.deskripsi_tambahan";
+    if ($filter != null) {
+      $filter = $this->db->escape_str($filter);
+      if (isset($filter['id_booking'])) {
+        if ($filter['id_booking'] != '') {
+          $where .= " AND bdet.id_booking='{$filter['id_booking']}'";
+        }
+      }
+    }
+
+
+    $data = $this->db->query("SELECT $select
+    FROM booking_biaya_tambahan AS bdet
+    LEFT JOIN ms_biaya_tambahan bth ON bth.id_tambahan=bdet.id_tambahan
+    $where
+    ");
+    if (isset($filter['response_validate'])) {
+      $data = $data->row();
+      if ($data == NULL) {
+        $response = ['status' => 0, 'pesan' => 'Data biaya tambahan untuk booking tidak ditemukan'];
+        send_json($response);
+      } else {
+        return $data;
+      }
+    } else {
+      return $data;
+    }
   }
   function getID()
   {
