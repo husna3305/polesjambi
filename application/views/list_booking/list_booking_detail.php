@@ -125,7 +125,12 @@ if ($mode == 'detail') {
           } ?>
 
           <?php
-          $data = ['row' => $row, 'pelunasan' => $pelunasan, 'services_pelunasan' => $services_pelunasan];
+          $data = [
+            'row' => $row,
+            'pelunasan' => $pelunasan,
+            'services_pelunasan' => $services_pelunasan,
+            'biaya_tambahan' => $biaya_tambahan
+          ];
           if ($row->status == 'selesai' || $row->status == 'menunggu_pelunasan') {
             $this->load->view('list_booking/list_booking_pelunasan', $data);
           } ?>
