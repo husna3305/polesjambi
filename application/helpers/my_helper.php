@@ -219,24 +219,9 @@ function get_slug($cek = false)
   $segment =  $CI->uri->segment(1);
 
   $links = array_keys(links_on_table());
-  $links[] = 'fetchData';
-  $links[] = 'saveData';
-  $links[] = 'saveEdit';
-  $links[] = 'insert';
-  $links[] = 'detail';
-  $links[] = 'saveRoleAkses';
-  $links[] = 'saveDataFileToDB';
-  $links[] = 'saveBuktiPembayaranDP';
-  $links[] = 'simpanDetailersServices';
-  $links[] = 'pauseServices';
-  $links[] = 'resumeServices';
-  $links[] = 'endServices';
-  $links[] = 'startServices';
-  $links[] = 'tambahServices';
-  $links[] = 'batalServices';
-  $links[] = 'selesaikanServices';
-  $links[] = 'simpanPelunasan';
-  $links[] = 'simpanBiayaTambahan';
+  foreach (skip_link() as $val) {
+    $links[] = $val;
+  }
 
   if ($CI->uri->segment(2) != NULL) {
     $seg2 = $CI->uri->segment(2);
@@ -266,12 +251,8 @@ function get_slug($cek = false)
     return $cek->slug;
   }
 }
-
-function get_controller()
+function skip_link()
 {
-  $CI = &get_instance();
-  $segment =  $CI->uri->segment(1);
-  $links = array_keys(links_on_table());
   $links[] = 'fetchData';
   $links[] = 'saveData';
   $links[] = 'saveEdit';
@@ -291,6 +272,17 @@ function get_controller()
   $links[] = 'selesaikanServices';
   $links[] = 'simpanPelunasan';
   $links[] = 'simpanBiayaTambahan';
+  $links[] = 'getReport';
+  return $links;
+}
+function get_controller()
+{
+  $CI = &get_instance();
+  $segment =  $CI->uri->segment(1);
+  $links = array_keys(links_on_table());
+  foreach (skip_link() as $val) {
+    $links[] = $val;
+  }
 
   if ($CI->uri->segment(2) != '') {
     $seg2 = $CI->uri->segment(2);
@@ -756,4 +748,9 @@ function tambah_jam($datetime, $jam)
   $date = date_create($datetime);
   date_add($date, date_interval_create_from_date_string("$jam hours"));
   return date_format($date, 'Y-m-d H:i:s');
+}
+
+function remove_space($var, $replace)
+{
+  return preg_replace('/\s+/', $replace, $var);
 }
