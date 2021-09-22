@@ -40,7 +40,7 @@ class List_booking extends Crm_Controller
         </div>
         <div class="flex-grow-1 ms-2">
           <p style="font-weight:500" class="mb-0">' . $rs->nama_lengkap . ' melakukan booking ' . $rs->tot_servis . ' services untuk Mobil ' . $rs->merk_mobil . ' ' . $rs->jenis_mobil . '</p>
-          <p style="font-weight:500" class="mb-0">#No. Polisi : ' . strtoupper($rs->no_polisi) . '</p>
+          <p style="font-weight:500" class="mb-0">#Plat Nomor : ' . strtoupper($rs->no_polisi) . '</p>
           <p style="font-size:13px" class="mb-0">Booking untuk tanggal : ' . $rs->tanggal_booking . ' ' . $rs->jam_booking . '</p>
         </div>
       </div>

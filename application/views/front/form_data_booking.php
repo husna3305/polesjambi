@@ -57,8 +57,8 @@
             <h2 class="text-center">Data Booking</h2>
             <div class="form-row">
               <div class="form-group col-md-12">
-                <label for="no_polisi">No. Polisi</label>
-                <input type="text" class="form-control" id="no_polisi" name='no_polisi' v-model="no_polisi" placeholder="No. Polisi" />
+                <label for="no_polisi">Plat Nomor</label>
+                <input type="text" class="form-control" id="no_polisi" name='no_polisi' v-model="no_polisi" placeholder="Plat Nomor" />
               </div>
             </div>
             <div class="form-group">

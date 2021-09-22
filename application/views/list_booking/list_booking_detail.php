@@ -77,7 +77,9 @@ if ($mode == 'detail') {
                       <p style="font-weight:500"><?= $row->created_at ?></p>
                     </div>
                   </div>
-                  <p class="card-text">Booking untuk tanggal : <?= $row->tanggal_booking . ' ' . $row->jam_booking ?></p>
+                  <p class="card-text">
+                    Plat Nomor : <?= $row->no_polisi ?><br>
+                    Booking untuk tanggal : <?= $row->tanggal_booking . ' ' . $row->jam_booking ?></p>
                   <div class="card" style="background-color:#f4f4f4">
                     <div class="card-body">
                       <!-- <button class="btn btn-sm btn-outline-secondary mb-2" type="button" data-bs-target="#t2_details" data-bs-toggle="collapse">Detail Services <i class="bx bx-caret-down"></i></button> -->
