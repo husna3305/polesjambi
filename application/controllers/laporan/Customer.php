@@ -34,7 +34,11 @@ class Customer extends Crm_Controller
     $paper = 'A4';
     //orientasi paper potrait / landscape
     $orientation = "portrait";
-    $html = $this->load->view(get_controller() . '/customer_cetak', $this->data);
-    $this->pdfgenerator->generate($html, $file_pdf, $paper, $orientation);
+    if ($params['tipe'] == 'pdf') {
+      $html = $this->load->view(get_controller() . '/customer_cetak', $this->data, true);
+      $this->pdfgenerator->generate($html, $file_pdf, $paper, $orientation);
+    } else {
+      $html = $this->load->view(get_controller() . '/customer_cetak', $this->data);
+    }
   }
 }
