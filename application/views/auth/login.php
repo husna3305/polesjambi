@@ -35,7 +35,7 @@
 								<div class="border p-4 rounded">
 									<div class="text-center">
 										<h3 class="">LOGIN</h3>
-										<p>Anda belum memiliki akun ? <a href="#">Daftar Disini</a>
+										<!-- <p>Anda belum memiliki akun ? <a href="#">Daftar Disini</a> -->
 										</p>
 									</div>
 									<div class="login-separater text-center mb-4"> <span>LOGIN</span>
