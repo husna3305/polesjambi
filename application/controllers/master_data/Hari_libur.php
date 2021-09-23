@@ -13,8 +13,10 @@ class Hari_libur extends Crm_Controller
 
   public function index()
   {
-    $data['title'] = $this->title;
-    $data['file']  = 'hari_libur_index';
+    $data['title']        = $this->title;
+    $data['file']         = 'hari_libur_index';
+    $data['libur_selalu'] = $this->dm->getHariLiburSelalu();
+
     if (isset($_GET['isCalendar'])) {
       $data['isCalendar'] = true;
     }
@@ -227,5 +229,26 @@ class Hari_libur extends Crm_Controller
       $this->session->set_flashdata(msg_not_found());
       redirect(get_slug());
     }
+  }
+
+  function simpanSelaluLibur()
+  {
+    $user = user();
+
+    $update = [
+      'updated_at' => waktu(),
+      'updated_by' => $user->id_user,
+    ];
+    foreach (list_hari() as $key => $value) {
+      $k = str_replace("'", '', $key);
+      $update[$k] = $this->input->post($k) == 'on' ? 1 : 0;
+    }
+    $cek = $this->dm->getHariLiburSelalu();
+    if ($cek == null) {
+      $this->db->insert('ms_hari_libur_selalu', $update);
+    } else {
+      $this->db->update('ms_hari_libur_selalu', $update);
+    }
+    send_json(['status' => 1, 'pesan' => 'Data berhasil disimpan']);
   }
 }

@@ -31,9 +31,6 @@ class Hari_libur_model extends CI_Model
       if (isset($filter['deleted'])) {
         $where .= " AND mu.deleted='{$filter['deleted']}'";
       }
-      if (isset($filter['aktif'])) {
-        $where .= " AND mu.aktif='{$filter['aktif']}'";
-      }
       if (isset($filter['search'])) {
         if ($filter['search'] != '') {
           $filter['search'] = $this->db->escape_str($filter['search']);

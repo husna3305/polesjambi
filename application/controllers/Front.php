@@ -8,6 +8,7 @@ class Front extends Crm_Controller
     parent::__construct();
     $this->load->model('services_model', 'srv_m');
     $this->load->model('booking_model', 'book');
+    $this->load->model('hari_libur_model', 'libur_m');
   }
 
   public function index()
@@ -46,6 +47,9 @@ class Front extends Crm_Controller
 
       $f_srv = ['aktif' => 1, 'select' => 'for_booking_services', 'id_services_in' => arr_sql($sess)];
       $data['services'] = $this->srv_m->getServices($f_srv)->result();
+      $flib             = ['deleted' => 0];
+      $libur            = $this->libur_m->getHariLibur($flib)->result_array();
+      $data['libur']    = array_by_key($libur, 'tgl_libur');
       $this->load->view('front/form_data_booking', $data);
     } else {
       redirect(site_url('front/services'));

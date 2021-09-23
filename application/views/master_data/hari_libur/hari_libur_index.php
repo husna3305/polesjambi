@@ -26,6 +26,31 @@
         </div>
       </div>
       <div class="card-body">
+        <div class="card">
+          <div class="card-header">
+            <b>Selalu Libur</b>
+          </div>
+          <div class="card-body">
+            <form id="form_selalu_libur">
+              <div class="row">
+                <div class="col-md-11">
+                  <div class="form-input">
+                    <?php  ?>
+                    <?php foreach (list_hari() as $key => $val) {
+                      $k = str_replace("'", '', $key);
+                    ?>
+                      <input class="form-check-input" type="checkbox" name="<?= $k ?>" id="<?= $k ?>" <?= isset($libur_selalu->$k) ? $libur_selalu->$k == 1 ? 'checked' : '' : '' ?>>
+                      <label class="form-label pr-8">&nbsp;<?= $val ?></label>
+                    <?php } ?>
+                  </div>
+                </div>
+                <div class="col-md-1">
+                  <button class="btn btn-primary btn-sm" id="btnSelaluLibur">&nbsp;<i class="fa fa-save"></i></button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
         <ul class="nav nav-tabs nav-primary" role="tablist">
           <li class="nav-item" role="presentation">
             <a class="nav-link <?= isset($isCalendar) ? '' : 'active' ?>" href="<?= site_url(get_slug()) ?>" role="tab" aria-selected="false">
@@ -200,4 +225,37 @@
     });
     calendar.render();
   }
+</script>
+<script>
+  $('#btnSelaluLibur').click(function() {
+    var values = new FormData($('#form_selalu_libur')[0]);
+    $.ajax({
+      beforeSend: function() {
+        $('#btnSelaluLibur').html('<i class="fa fa-spinner fa-spin"></i>');
+        $('#btnSelaluLibur').attr('disabled', true);
+      },
+      enctype: 'multipart/form-data',
+      url: '<?= site_url(get_controller() . '/simpanSelaluLibur') ?>',
+      type: "POST",
+      data: values,
+      processData: false,
+      contentType: false,
+      // cache: false,
+      dataType: 'JSON',
+      success: function(response) {
+        if (response.status == 1) {
+          round_success_noti(response.pesan);
+        } else {
+          round_error_noti(response.pesan);
+          $('#btnSelaluLibur').attr('disabled', false);
+        }
+        $('#btnSelaluLibur').html('&nbsp;<i class="fa fa-save"></i>');
+      },
+      error: function() {
+        round_error_noti('Telah terjadi kesalahan !');
+        $('#btnSelaluLibur').html('&nbsp;<i class="fa fa-save"></i>');
+        $('#btnSelaluLibur').attr('disabled', false);
+      }
+    });
+  });
 </script>

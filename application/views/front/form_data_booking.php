@@ -296,6 +296,7 @@
   $('.datepicker').on('cancel.daterangepicker', function(ev, picker) {
     $(this).val('');
   });
+  libur = <?= json_encode($libur) ?>;
   $('.datetimepicker').daterangepicker({
     timePicker: true,
     minDate: today,
@@ -325,6 +326,22 @@
       //    "Desember"
       //  ]
     },
+    isInvalidDate: function(date) {
+      for (var ii = 0; ii < libur.length; ii++) {
+        if (date.format('YYYY-MM-DD') == libur[ii]) {
+          return true;
+        }
+      }
+      <?php
+      $ceklib = $this->dm->getHariLiburSelalu();
+      foreach (hari_to_int() as $key => $value) {
+        if ($ceklib != null) {
+          if ($ceklib->$key == 1) { ?>
+            if (date.day() == <?= $value ?>) return true;
+      <?php }
+        }
+      } ?>
+    }
 
   })
 </script>

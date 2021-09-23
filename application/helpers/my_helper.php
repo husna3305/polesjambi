@@ -754,3 +754,22 @@ function remove_space($var, $replace)
 {
   return preg_replace('/\s+/', $replace, $var);
 }
+
+function list_hari()
+{
+  return ['senin' => 'Senin', 'selasa' => 'Selasa', 'rabu' => 'Rabu', 'kamis' => 'Kamis', "jumat" => "Jum'at", 'sabtu' => "Sabtu", 'minggu' => "Minggu"];
+}
+function hari_to_int()
+{
+  return ['senin' => 1, 'selasa' => 2, 'rabu' => 3, 'kamis' => 4, 'jumat' => 5, 'sabtu' => 6, 'minggu' => 0];
+}
+function array_by_key($arr, $key)
+{
+  $new = [];
+  foreach ($arr as $k => $val) {
+    if (isset($val[$key])) {
+      $new[] = $val[$key];
+    }
+  }
+  return $new;
+}

@@ -61,6 +61,18 @@
       padding-right: 15px;
     }
 
+    .pr-6 {
+      padding-right: 25px;
+    }
+
+    .pr-7 {
+      padding-right: 35px;
+    }
+
+    .pr-8 {
+      padding-right: 45px;
+    }
+
     .list-group-item:hover {
       background-color: #f1f1f1;
     }

@@ -103,4 +103,9 @@ class Default_model extends CI_Model
     }
     return $id_generated;
   }
+
+  function getHariLiburSelalu()
+  {
+    return $this->db->query("SELECT * FROM ms_hari_libur_selalu")->row();
+  }
 }
