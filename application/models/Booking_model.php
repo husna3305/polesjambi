@@ -35,7 +35,13 @@ class Booking_model extends CI_Model
         if ($filter['search'] != '') {
           $filter['search'] = $this->db->escape_str($filter['search']);
           $where .= " AND (book.id_merk_mobil LIKE '%{$filter['search']}%'
-                           OR book.merk_mobil LIKE '%{$filter['search']}%'
+                           OR book.no_polisi LIKE '%{$filter['search']}%'
+                           OR book.nama_lengkap LIKE '%{$filter['search']}%'
+                           OR book.no_wa LIKE '%{$filter['search']}%'
+                           OR book.alamat LIKE '%{$filter['search']}%'
+                           OR book.no_polisi_no_space LIKE '%{$filter['search']}%'
+                           OR merk.merk_mobil LIKE '%{$filter['search']}%'
+                           OR jenis.jenis_mobil LIKE '%{$filter['search']}%'
                       )
           
           ";

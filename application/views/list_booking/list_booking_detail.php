@@ -62,10 +62,12 @@ if ($mode == 'detail') {
               <h5 class="m-2">
                 <span class="badge rounded-pill bg-light border">&nbsp;</span>
               </h5>
-              <div class="row h-50">
-                <div class="col border-end">&nbsp;</div>
-                <div class="col">&nbsp;</div>
-              </div>
+              <?php if ($row->status != 'expired_pelunasan_dp') { ?>
+                <div class="row h-50">
+                  <div class="col border-end">&nbsp;</div>
+                  <div class="col">&nbsp;</div>
+                </div>
+              <?php } ?>
             </div>
             <!-- timeline item 1 event content -->
             <div class="col py-2">
@@ -118,11 +120,14 @@ if ($mode == 'detail') {
           <!-- timeline item 2 -->
           <?php
           $data = ['row' => $row, 'bayar_dp' => $bayar_dp];
-          $this->load->view('list_booking/list_booking_pembayaran_dp', $data); ?>
+          if ($row->status != 'expired_pelunasan_dp') {
+            $this->load->view('list_booking/list_booking_pembayaran_dp', $data);
+          }
+          ?>
 
           <?php
           $data = ['row' => $row];
-          if ($row->status == 'dp_lunas' || $row->status == 'menunggu_kedatangan' || $row->status == 'sedang_dikerjakan' || $row->status == 'selesai' || $row->status == 'menunggu_pelunasan') {
+          if ($row->status == 'menunggu_kedatangan' || $row->status == 'sedang_dikerjakan' || $row->status == 'selesai' || $row->status == 'menunggu_pelunasan') {
             $this->load->view('list_booking/list_booking_pengerjaan', $data);
           } ?>
 

@@ -54,6 +54,12 @@ class List_booking extends Crm_Controller
       if (($rs->status == 'menunggu_kedatangan')) {
         $button .= '<button type="button" class="btn btn-outline-info btn-sm left"><i class="fa fa-check"></i> Menunggu Kedatangan</i></button>';
       }
+      if (($rs->status == 'expired_pelunasan_dp')) {
+        $button = '<button type="button" class="btn btn-outline-danger btn-sm left"><i class="fa fa-check"></i> Pelunasan DP Expired</i></button>';
+      }
+      if (($rs->status == 'tidak_datang')) {
+        $button = '<button type="button" class="btn btn-outline-warning btn-sm left"><i class="fa fa-check"></i> Tidak Datang</i></button>';
+      }
       if (($rs->status == 'sedang_dikerjakan')) {
         $button .= '<button type="button" class="btn btn-outline-info btn-sm left"><i class="fa fa-check"></i> Sedang Dikerjakan</i></button>';
       }
