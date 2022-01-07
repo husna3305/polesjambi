@@ -273,6 +273,9 @@ function skip_link()
   $links[] = 'simpanPelunasan';
   $links[] = 'simpanBiayaTambahan';
   $links[] = 'getReport';
+  $links[] = 'upload_gambar';
+  $links[] = 'atur_gambar';
+  $links[] = 'hapus_gambar';
   return $links;
 }
 function get_controller()
@@ -772,4 +775,16 @@ function array_by_key($arr, $key)
     }
   }
   return $new;
+}
+
+function next_auto_increment($table)
+{
+  $CI = &get_instance();
+  $ck = $CI->db->query("SHOW TABLE STATUS LIKE '$table'")->row();
+  return $ck->Auto_increment;
+}
+
+function for_pages()
+{
+  return ['hasil'=>'Hasil Pengerjaan','proses'=>'Proses Detailiing'];
 }

@@ -9,12 +9,15 @@ class Front extends Crm_Controller
     $this->load->model('services_model', 'srv_m');
     $this->load->model('booking_model', 'book');
     $this->load->model('hari_libur_model', 'libur_m');
+    $this->load->model('gambar_gallery_model', 'gbr_m');
   }
 
   public function index()
   {
     $data['title'] = $this->title;
-    $this->load->view('front/index');
+    $data['proses'] = $this->gbr_m->getGambarFor('proses')->result();
+    $data['hasil'] = $this->gbr_m->getGambarFor('hasil')->result();
+    $this->load->view('front/index',$data);
     // $this->template_front($data);
   }
   public function services()
