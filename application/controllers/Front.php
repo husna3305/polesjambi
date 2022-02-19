@@ -10,6 +10,7 @@ class Front extends Crm_Controller
     $this->load->model('booking_model', 'book');
     $this->load->model('hari_libur_model', 'libur_m');
     $this->load->model('gambar_gallery_model', 'gbr_m');
+    $this->load->model('testimoni_model', 'tst_m');
   }
 
   public function index()
@@ -17,6 +18,8 @@ class Front extends Crm_Controller
     $data['title'] = $this->title;
     $data['proses'] = $this->gbr_m->getGambarFor('proses')->result();
     $data['hasil'] = $this->gbr_m->getGambarFor('hasil')->result();
+    $data['testimoni']=$this->tst_m->getTestimoni(['aktif'=>1])->result();
+    // send_json($data);
     $this->load->view('front/index',$data);
     // $this->template_front($data);
   }

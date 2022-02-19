@@ -51,8 +51,8 @@
           <li><a class="nav-link scrollto" href="#about">About</a></li>
           <li><a class="nav-link scrollto" href="#services">Services</a></li>
           <li><a class="nav-link scrollto " href="#portfolio">Work</a></li>
-          
-          
+
+
           <li><a class="nav-link scrollto" href="#footer">Contact</a></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
@@ -70,7 +70,7 @@
           <h2>We are team of talented designers making websites with Bootstrap</h2>
           <!-- <a href="services.html" class="btn-get-started scrollto">Mulai Booking</a> -->
         </div>
-        <div class="col-md-6 vid-yt mt-5" >
+        <div class="col-md-6 vid-yt mt-5">
           <iframe width="500" height="300" src="https://www.youtube.com/embed/rNPYznRCutU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
@@ -121,12 +121,12 @@
         <div class="row justify-content-center">
           <div class="col-md-8">
 
-        <div class="text-center">
-          <h3>Mulai Booking</h3>
-          <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-          <a class="cta-btn" href="<?=site_url('front/services')?>">Mulai Booking</a>
-        </div>
-        </div>
+            <div class="text-center">
+              <h3>Mulai Booking</h3>
+              <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+              <a class="cta-btn" href="<?= site_url('front/services') ?>">Mulai Booking</a>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -316,7 +316,7 @@
           <?php } ?>
         </div>
         <div class="row justify-content-center">
-          <div class="col-md-6 text-center mt-4 more-work"> 
+          <div class="col-md-6 text-center mt-4 more-work">
             <h4>Lihat lebih banyak Pengerjaan Kami</h4>
             <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
           </div>
@@ -335,77 +335,26 @@
 
         <div class="section-title">
           <h2>Testimonials</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+          <p>Testimoni para customer</p>
         </div>
 
         <div class="testimonials-slider swiper-container" data-aos="fade-up" data-aos-delay="100">
           <div class="swiper-wrapper">
 
-            <div class="swiper-slide">
-              <div class="testimonial-item">
-                <p>
-                  <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                  Proin iaculis purus consequat sem cure digni ssim donec porttitora entum suscipit rhoncus. Accusantium quam, ultricies eget id, aliquam eget nibh et. Maecen aliquam, risus at semper.
-                  <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                </p>
-                <img src="<?= base_url('assets/front/') ?>/assets/img/testimonials/testimonials-1.jpg" class="testimonial-img" alt="">
-                <h3>Saul Goodman</h3>
-                <h4>Ceo &amp; Founder</h4>
-              </div>
-            </div><!-- End testimonial item -->
-
-            <div class="swiper-slide">
-              <div class="testimonial-item">
-                <p>
-                  <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                  Export tempor illum tamen malis malis eram quae irure esse labore quem cillum quid cillum eram malis quorum velit fore eram velit sunt aliqua noster fugiat irure amet legam anim culpa.
-                  <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                </p>
-                <img src="<?= base_url('assets/front/') ?>/assets/img/testimonials/testimonials-2.jpg" class="testimonial-img" alt="">
-                <h3>Sara Wilsson</h3>
-                <h4>Designer</h4>
-              </div>
-            </div><!-- End testimonial item -->
-
-            <div class="swiper-slide">
-              <div class="testimonial-item">
-                <p>
-                  <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                  Enim nisi quem export duis labore cillum quae magna enim sint quorum nulla quem veniam duis minim tempor labore quem eram duis noster aute amet eram fore quis sint minim.
-                  <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                </p>
-                <img src="<?= base_url('assets/front/') ?>/assets/img/testimonials/testimonials-3.jpg" class="testimonial-img" alt="">
-                <h3>Jena Karlis</h3>
-                <h4>Store Owner</h4>
-              </div>
-            </div><!-- End testimonial item -->
-
-            <div class="swiper-slide">
-              <div class="testimonial-item">
-                <p>
-                  <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                  Fugiat enim eram quae cillum dolore dolor amet nulla culpa multos export minim fugiat minim velit minim dolor enim duis veniam ipsum anim magna sunt elit fore quem dolore labore illum veniam.
-                  <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                </p>
-                <img src="<?= base_url('assets/front/') ?>/assets/img/testimonials/testimonials-4.jpg" class="testimonial-img" alt="">
-                <h3>Matt Brandon</h3>
-                <h4>Freelancer</h4>
-              </div>
-            </div><!-- End testimonial item -->
-
-            <div class="swiper-slide">
-              <div class="testimonial-item">
-                <p>
-                  <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                  Quis quorum aliqua sint quem legam fore sunt eram irure aliqua veniam tempor noster veniam enim culpa labore duis sunt culpa nulla illum cillum fugiat legam esse veniam culpa fore nisi cillum quid.
-                  <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                </p>
-                <img src="<?= base_url('assets/front/') ?>/assets/img/testimonials/testimonials-5.jpg" class="testimonial-img" alt="">
-                <h3>John Larson</h3>
-                <h4>Entrepreneur</h4>
-              </div>
-            </div><!-- End testimonial item -->
-
+            <?php foreach ($testimoni as $ts) { ?>
+              <div class="swiper-slide">
+                <div class="testimonial-item">
+                  <p>
+                    <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                    <?=strip_tags($ts->teks_testimoni)?>
+                    <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+                  </p>
+                  <img src="<?= base_url($ts->path_img_small)?>" class="testimonial-img" alt="">
+                  <h3><?=$ts->nama?></h3>
+                  <h4><?=$ts->pekerjaan?></h4>
+                </div>
+              </div><!-- End testimonial item -->
+            <?php } ?>
           </div>
           <div class="swiper-pagination"></div>
         </div>
@@ -416,88 +365,88 @@
     <!-- ======= Portfolio Section ==
   </main><!-- End #main -->
 
-  <!-- ======= Footer ======= -->
-  <footer id="footer">
+    <!-- ======= Footer ======= -->
+    <footer id="footer">
 
-    <div class="footer-top">
-      <div class="container">
-        <div class="row">
+      <div class="footer-top">
+        <div class="container">
+          <div class="row">
 
-          <div class="col-lg-3 col-md-6 footer-contact">
-            <h3>Poles Jambi</h3>
-            <p>
-              Jl. Soekarno Hatta <br>
-              TelanaiPura,Kota Jambi - Jambi <br>
-              Indonesia <br><br>
-              <strong>Phone:</strong> +628 123 456<br>
-              <strong>Email:</strong> info@polesjambi.com<br>
-            </p>
+            <div class="col-lg-3 col-md-6 footer-contact">
+              <h3>Poles Jambi</h3>
+              <p>
+                Jl. Soekarno Hatta <br>
+                TelanaiPura,Kota Jambi - Jambi <br>
+                Indonesia <br><br>
+                <strong>Phone:</strong> +628 123 456<br>
+                <strong>Email:</strong> info@polesjambi.com<br>
+              </p>
+            </div>
+
+            <div class="col-lg-2 col-md-6 footer-links">
+              <h4>Useful Links</h4>
+              <ul>
+                <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
+                <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
+                <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
+                <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
+                <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
+              </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-6 footer-links">
+              <h4>Services</h4>
+              <ul>
+                <li><i class="bx bx-chevron-right"></i> <a href="#">Full Detailing</a></li>
+                <li><i class="bx bx-chevron-right"></i> <a href="#">Headlines Cleaning</a></li>
+                <li><i class="bx bx-chevron-right"></i> <a href="#">Plafon Cleaning</a></li>
+                <li><i class="bx bx-chevron-right"></i> <a href="#">Coating Ekpress</a></li>
+                <li><i class="bx bx-chevron-right"></i> <a href="#">Back to Back</a></li>
+              </ul>
+            </div>
+
+            <div class="col-lg-4 peta">
+              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.2496007083205!2d103.5878499144604!3d-1.6067487365121473!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e2588f58bc5b2c1%3A0xcb82067d11aef3f8!2sGrapari%20Telkomsel%20Telanai%20Pura!5e0!3m2!1sen!2sid!4v1638804251505!5m2!1sen!2sid" width="450" height="400" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+
+
           </div>
-
-          <div class="col-lg-2 col-md-6 footer-links">
-            <h4>Useful Links</h4>
-            <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
-            </ul>
-          </div>
-
-          <div class="col-lg-3 col-md-6 footer-links">
-            <h4>Services</h4>
-            <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Full Detailing</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Headlines Cleaning</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Plafon Cleaning</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Coating Ekpress</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Back to Back</a></li>
-            </ul>
-          </div>
-
-          <div class="col-lg-4 peta">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.2496007083205!2d103.5878499144604!3d-1.6067487365121473!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e2588f58bc5b2c1%3A0xcb82067d11aef3f8!2sGrapari%20Telkomsel%20Telanai%20Pura!5e0!3m2!1sen!2sid!4v1638804251505!5m2!1sen!2sid" width="450" height="400" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-          </div>
-          
-
         </div>
       </div>
-    </div>
 
-    <div class="container d-md-flex py-4">
+      <div class="container d-md-flex py-4">
 
-      <div class="me-md-auto text-center text-md-start">
-        <div class="copyright">
-          &copy; Copyright <strong><span>Poles Jambi</span></strong>. All Rights Reserved
+        <div class="me-md-auto text-center text-md-start">
+          <div class="copyright">
+            &copy; Copyright <strong><span>Poles Jambi</span></strong>. All Rights Reserved
+          </div>
+          <div class="credits">
+            <!-- All the links in the footer should remain intact. -->
+            <!-- You can delete the links only if you purchased the pro version. -->
+            <!-- Licensing information: https://bootstrapmade.com/license/ -->
+            <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/Poles Jambi-free-onepage-bootstrap-theme/ -->
+            Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+          </div>
         </div>
-        <div class="credits">
-          <!-- All the links in the footer should remain intact. -->
-          <!-- You can delete the links only if you purchased the pro version. -->
-          <!-- Licensing information: https://bootstrapmade.com/license/ -->
-          <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/Poles Jambi-free-onepage-bootstrap-theme/ -->
-          Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+        <div class="social-links text-center text-md-right pt-3 pt-md-0">
+          <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+          <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
         </div>
       </div>
-      <div class="social-links text-center text-md-right pt-3 pt-md-0">
-        <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-        <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-      </div>
-    </div>
-  </footer><!-- End Footer -->
+    </footer><!-- End Footer -->
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-  <!-- Vendor JS Files -->
-  <script src="<?= base_url('assets/front/') ?>/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="<?= base_url('assets/front/') ?>/assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="<?= base_url('assets/front/') ?>/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-  <script src="<?= base_url('assets/front/') ?>/assets/vendor/php-email-form/validate.js"></script>
-  <script src="<?= base_url('assets/front/') ?>/assets/vendor/purecounter/purecounter.js"></script>
-  <script src="<?= base_url('assets/front/') ?>/assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <!-- Vendor JS Files -->
+    <script src="<?= base_url('assets/front/') ?>/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= base_url('assets/front/') ?>/assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="<?= base_url('assets/front/') ?>/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+    <script src="<?= base_url('assets/front/') ?>/assets/vendor/php-email-form/validate.js"></script>
+    <script src="<?= base_url('assets/front/') ?>/assets/vendor/purecounter/purecounter.js"></script>
+    <script src="<?= base_url('assets/front/') ?>/assets/vendor/swiper/swiper-bundle.min.js"></script>
 
-  <!-- Template Main JS File -->
-  <script src="<?= base_url('assets/front/') ?>/assets/js/main.js"></script>
+    <!-- Template Main JS File -->
+    <script src="<?= base_url('assets/front/') ?>/assets/js/main.js"></script>
 
 </body>
 
